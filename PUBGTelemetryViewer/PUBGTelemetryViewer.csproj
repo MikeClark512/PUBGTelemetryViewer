@@ -37,11 +37,6 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="PUBGLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Desktop\PUBGTelemetryViewer-master\PUBGTelemetryViewer\bin\Debug\PUBGLibrary.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -107,6 +102,10 @@
     <ProjectReference Include="..\BruTile\BruTile.csproj">
       <Project>{70315167-2bf1-4c7b-9184-728caabf30d7}</Project>
       <Name>BruTile</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PUBGLibrary\PUBGLibrary.csproj">
+      <Project>{323bd442-e1d1-42cd-a728-ab10e029a51f}</Project>
+      <Name>PUBGLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

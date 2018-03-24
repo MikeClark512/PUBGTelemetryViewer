@@ -112,7 +112,7 @@ namespace PUBGTelemetryViewer
             {
                 string json = File.ReadAllText(path);
                 APIRequest request = new APIRequest();
-                var obj = request.MatchPhraser(json);
+                var obj = request.TelemetryPhraser(json);
 
                 loadMarkers(obj, map.RootLayer.MarkerCache, map.RootLayer.LineCache);
 
@@ -126,7 +126,7 @@ namespace PUBGTelemetryViewer
 
         }
 
-        private void loadMarkers(APIMatch list, List<Marker> marker, List<Line> lines)
+        private void loadMarkers(APITelemetry list, List<Marker> marker, List<Line> lines)
         {
             try
             {

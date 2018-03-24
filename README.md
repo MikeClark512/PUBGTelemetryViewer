@@ -6,7 +6,6 @@ C# PUBG Viewer for the newly telemetry file. Heavily under construction.
 
 # TODO
 -------
-* Fix using [PUBGLibary](https://github.com/EpicKitten/PUBGLibrary)
 * Draw lines for each event. Add markers for certain events
 * Make icons for event
 * Improve performance
@@ -14,7 +13,7 @@ C# PUBG Viewer for the newly telemetry file. Heavily under construction.
 
 # Changelog
 -------
-Nothing here yet
+* Fix using [PUBGLibary](https://github.com/EpicKitten/PUBGLibrary)
 
 # License
 -------

@@ -5,47 +5,51 @@ using System.Text;
 
 namespace BruTile.UI
 {
-    public class Marker
+    public class Ellipse
     {
+        public enum ZoneType
+        {
+            Blue_Zone,
+            Red_Zone,
+        };
+
+
         public bool Visible { get; private set; }
-        
+
         private double x;
-        public double X { 
-            get { return x;}
+        public double X
+        {
+            get { return x; }
         }
         private double y;
         public double Y
         {
-            get
-            {
-                return y;
-            }
+            get { return y; }
         }
 
+        private double radius;
+        public double Radius
+        {
+            get { return radius; }
+        }
         public object UIElement { get; set; }
 
         public System.Windows.Point[] Points { get; set; }
-        
-        public int ImageIndex { get; private set; }
-        public string Text { get; private set; }
-        public string Description { get; private set; }
         public int ZIndex { get; private set; }
-        public string Type { get; private set; }
-        public float elapsedtime { get; private set; }
+        public ZoneType Type { get; private set; }
+        public string Subtype { get; private set; }
+        public int time { get; private set; }
 
-        public Marker(double x, double y, bool visible, int imageIndex,string type, float time, string text, string description, int zIndex)
+        public Ellipse(int time, double x, double y, double radius, bool visible, ZoneType type, int zIndex)
         {
             double xt = ((x / 32768) * 1312);
             double yt = ((y / 32768) * 1312);
-
-            ImageIndex = imageIndex;
-            Text = text;
-            Description = description;
             this.x = Math.Round(xt);
             this.y = Math.Round(-yt);
+            this.radius = Math.Round(((radius / 32768) * 1312));
             Visible = visible;
             Type = type;
-            elapsedtime = time;
+            this.time = time;
             ZIndex = zIndex;
         }
     }

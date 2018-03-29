@@ -90,6 +90,11 @@ namespace BruTile.UI.Windows
             return new Point((x - extent.MinX) / resolution, (extent.MaxY - y) / resolution);
         }
 
+        public double RadiusToMap(double r)
+        {
+            return (r - extent.MinX) / resolution;
+        }
+
         public Point MapToWorld(double x, double y)
         {
             return new Point((extent.MinX + x * resolution), (extent.MaxY - (y * resolution)));

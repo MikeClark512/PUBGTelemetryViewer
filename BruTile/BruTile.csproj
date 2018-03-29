@@ -70,6 +70,7 @@
     <Compile Include="Cache\FileCache.cs" />
     <Compile Include="TileSchema.cs" />
     <Compile Include="Extent.cs" />
+    <Compile Include="UI\Ellipse.cs" />
     <Compile Include="UI\Fetcher\FetchOnThread.cs" />
     <Compile Include="UI\Fetcher\FetchStrategy.cs" />
     <Compile Include="UI\Fetcher\TileFetcher.cs" />

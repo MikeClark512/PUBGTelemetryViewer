@@ -23,6 +23,7 @@ namespace BruTile.UI.Windows
     public interface ITransform
     {
         Point WorldToMap(double x, double y);
+        double RadiusToMap(double r);
         Point MapToWorld(double x, double y);
         double Resolution { get; }
         Extent Extent { get; }

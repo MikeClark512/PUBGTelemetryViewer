@@ -33,6 +33,10 @@ namespace PUBGTelemetryViewer
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public APITelemetry telemetryData;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -54,7 +58,6 @@ namespace PUBGTelemetryViewer
 
         private void InitializeTransform(TileSchema schema)
         {
-            //map.Transform.Center = new Point(270137d, -209058d);
             map.Transform.Center = new Point(16384d, -16384d);
             map.Transform.Resolution = schema.Resolutions[2];
             schema.Resolutions.Add(2);
@@ -86,6 +89,8 @@ namespace PUBGTelemetryViewer
                 AddIcon(map.MarkerImages, -1, "noicon");
                 AddIcon(map.MarkerImages, 0, "black");
 
+               // BruTile.UI.Ellipse ellipse = new BruTile.UI.Ellipse(0, 17525, -17584, 2002, true, BruTile.UI.Ellipse.ZoneType.Red_Zone, 200);
+              //  map.RootLayer.ellipsesCache.Add(ellipse);
                 OpenFileDialog dlg = new OpenFileDialog();
                 dlg.Filter = "PUBG Telemetry JSON file (.json)|*.json";
                 if (dlg.ShowDialog() == true)
@@ -111,11 +116,13 @@ namespace PUBGTelemetryViewer
             try
             {
                 string json = File.ReadAllText(path);
-                APIRequest request = new APIRequest();
-                var obj = request.TelemetryPhraser(json);
+                APIRequest pIRequest = new APIRequest();
 
-                loadMarkers(obj, map.RootLayer.MarkerCache, map.RootLayer.LineCache);
+                telemetryData = pIRequest.TelemetryPhraser(json);
 
+
+                DisplayName(telemetryData.LogMatchStart.PlayerList);
+               
 
             }
             catch(Exception ex)
@@ -126,11 +133,38 @@ namespace PUBGTelemetryViewer
 
         }
 
-        private void loadMarkers(APITelemetry list, List<Marker> marker, List<Line> lines)
+        private void LoadEllipses(List<LogGameStatePeriodic> logGameStatePeriodicList)
+        {
+            
+            foreach (var i in logGameStatePeriodicList)
+            {
+                if (!i.GameState.BlueZone.Exists() && !i.GameState.RedZone.Exists())
+                    continue;
+                BruTile.UI.Ellipse Bellipse = new BruTile.UI.Ellipse(i.GameState.ElapsedTime,i.GameState.BlueZone.X, i.GameState.BlueZone.Y, i.GameState.BlueZone.Radius, true, BruTile.UI.Ellipse.ZoneType.Blue_Zone, 200);
+                BruTile.UI.Ellipse Rellipse = new BruTile.UI.Ellipse(i.GameState.ElapsedTime, i.GameState.RedZone.X, i.GameState.RedZone.Y, i.GameState.RedZone.Radius, true, BruTile.UI.Ellipse.ZoneType.Red_Zone, 200);
+                map.RootLayer.ellipsesCache.Add(Bellipse);
+                map.RootLayer.ellipsesCache.Add(Rellipse);
+            }
+        }
+
+        private void DisplayName(List<Player> player)
+        {
+            var player2 = player.OrderBy(x => x.PUBGName);
+            foreach(Player p in player2)
+            {
+                playerlist.Items.Add(p.PUBGName);
+            }
+        }
+
+        private void loadMarkers(PlayerSpecificLog list, List<Marker> marker, List<Line> lines)
         {
             try
             {
-
+                foreach(var pos in list.LogPlayerPositionList)
+                {
+                    Marker m = new Marker(pos.LoggedPlayer.Location.X, pos.LoggedPlayer.Location.Y, true, -1, "Location", pos.ElapsedTime, "Position", "test", 200);
+                    marker.Add(m);
+                }
             }
             catch (Exception ex)
             {
@@ -151,5 +185,14 @@ namespace PUBGTelemetryViewer
             list.Add(index, bi);
         }
 
+        private void playerlist_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            map.ClearMarkers();
+            
+            var selectedplayer = playerlist.SelectedValue.ToString();
+            var playerdat = telemetryData.GetPlayerSpecificLog(selectedplayer, SearchType.PUBGName);
+            loadMarkers(playerdat, map.RootLayer.MarkerCache, map.RootLayer.LineCache);
+            map.Refresh();
+        }
     }
 }

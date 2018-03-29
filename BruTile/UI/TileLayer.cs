@@ -32,7 +32,9 @@ namespace BruTile.UI
         TileFetcher<T> tileFetcher;
         MemoryCache<T> memoryCache = new MemoryCache<T>(7,64);
         List<BruTile.UI.Marker> markerCache = new List<BruTile.UI.Marker>();
+        List<BruTile.UI.Marker> eventCache = new List<BruTile.UI.Marker>();
         List<System.Windows.Shapes.Line> lineCache = new List<System.Windows.Shapes.Line>();
+        List<BruTile.UI.Ellipse> ellipseCache = new List<BruTile.UI.Ellipse>();
 
         const int maxRetries = 3;
 
@@ -62,9 +64,19 @@ namespace BruTile.UI
             get { return markerCache; }
         }
 
+        public List<BruTile.UI.Marker> EventCache
+        {
+            get { return eventCache; }
+        }
+
         public List<System.Windows.Shapes.Line> LineCache
         {
             get { return lineCache; }
+        }
+
+        public List<BruTile.UI.Ellipse> ellipsesCache
+        {
+            get { return ellipseCache;  }
         }
 
         #endregion

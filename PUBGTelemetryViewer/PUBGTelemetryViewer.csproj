@@ -104,7 +104,7 @@
       <Name>BruTile</Name>
     </ProjectReference>
     <ProjectReference Include="..\PUBGLibrary\PUBGLibrary.csproj">
-      <Project>{323bd442-e1d1-42cd-a728-ab10e029a51f}</Project>
+      <Project>{85c705af-550d-4e21-849c-487c5dccdcc9}</Project>
       <Name>PUBGLibrary</Name>
     </ProjectReference>
   </ItemGroup>

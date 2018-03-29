@@ -23,8 +23,12 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using BruTile;
 using BruTile.Cache;
+
+
+using Circle = System.Windows.Shapes.Ellipse;
 
 namespace BruTile.UI.Windows
 {
@@ -37,13 +41,14 @@ namespace BruTile.UI.Windows
 
         public IMarkerControl ActiveMarker { get; private set; }
 
-        public void Render(Canvas canvas,Canvas canvas2, TileSchema schema, ITransform transform, MemoryCache<MemoryStream> cache, List<Marker> markerCache, List<System.Windows.Shapes.Line> line)
+        public void Render(Canvas canvas,Canvas canvas2, TileSchema schema, ITransform transform, MemoryCache<MemoryStream> cache, List<Ellipse> ellipseCache, List<Marker> markerCache, List<System.Windows.Shapes.Line> line)
         {
             CollapseAll(canvas);
             int level = BruTile.Utilities.GetNearestLevel(schema.Resolutions, transform.Resolution);
             DrawRecursive(canvas, schema, transform, cache, transform.Extent, level);
             DrawMarkers(canvas, schema, transform, markerCache, transform.Extent, level);
             DrawLines(canvas, schema, transform, line, markerCache, transform.Extent, level);
+           // DrawCircle(canvas, schema, transform, ellipseCache, transform.Extent, level);
             RemoveCollapsed(canvas);
             RemoveCollapsed(canvas2);
             
@@ -75,11 +80,53 @@ namespace BruTile.UI.Windows
                 }
                 Rect dest = MapTransformHelper.WorldToMap(extent, transform);
 
-                if (dest.Contains(p) && dest.Contains(p2))
-                {
+                //if (dest.Contains(p) && dest.Contains(p2))
+                //{
                     Canvas.SetZIndex(line, 200);
-                }
+              //  }
                 line.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void DrawCircle(Canvas canvas, TileSchema schema, ITransform transform, List<BruTile.UI.Ellipse> cache, Extent extent, int level)
+        {
+            foreach (var ellipse in cache)
+            {
+                double xt = ellipse.X;
+                double yt = ellipse.Y;
+
+                double radiust = transform.RadiusToMap(ellipse.Radius);
+                Circle circle = new Circle()
+                {
+                    Width = radiust,
+                    Height = radiust,
+                    StrokeThickness = 2,
+                };
+                if (ellipse.Type == Ellipse.ZoneType.Red_Zone)
+                {
+                    circle.Stroke = Brushes.Red;
+                   // circle.Fill = Brushes.Red;
+                }
+                else
+                {
+                  //  circle.Fill = Brushes.Blue;
+                    circle.Stroke = Brushes.Blue;
+                }
+                if (!canvas.Children.Contains(circle))
+                {
+                    canvas.Children.Add(circle);
+
+                }
+
+                Rect dest = MapTransformHelper.WorldToMap(extent, transform);
+                Point p = transform.WorldToMap(xt, yt);
+                
+                if (dest.Contains(p))
+                {
+                    Canvas.SetZIndex(circle, 200);
+                    Canvas.SetLeft(circle, p.X);
+                    Canvas.SetTop(circle, p.Y);
+                }
             }
         }
 
@@ -145,12 +192,12 @@ namespace BruTile.UI.Windows
 
                 Rect dest = MapTransformHelper.WorldToMap(extent, transform);
                 Point p = transform.WorldToMap(m.X, m.Y);
-                if (dest.Contains(p))
-                {
+                //if (dest.Contains(p))
+                //{
                     Canvas.SetZIndex(marker, m.ZIndex);
                     Canvas.SetLeft(marker, p.X);
                     Canvas.SetTop(marker, p.Y);
-
+                    
                     //if (m.Points != null)
                     //{
                     //    if (!(marker.RenderTransform is ScaleTransform))
@@ -178,7 +225,7 @@ namespace BruTile.UI.Windows
 
                     marker.Visibility = Visibility.Visible;
 
-                  }
+             //     }
             }
         }
 
@@ -300,6 +347,11 @@ namespace BruTile.UI.Windows
                     System.Windows.Shapes.Line line = element as System.Windows.Shapes.Line;
                     canvas.Children.Remove(line);
                 }
+                if ((element is System.Windows.Shapes.Ellipse) && (element.Visibility == Visibility.Collapsed))
+                {
+                    System.Windows.Shapes.Ellipse ellipse = element as System.Windows.Shapes.Ellipse;
+                    canvas.Children.Remove(ellipse);
+                }
             }
         }
 
@@ -317,6 +369,11 @@ namespace BruTile.UI.Windows
                 {
                     System.Windows.Shapes.Line line = element as System.Windows.Shapes.Line;
                     canvas.Children.Remove(line);
+                }
+                else if (element is System.Windows.Shapes.Ellipse)
+                {
+                    System.Windows.Shapes.Ellipse ellipse = element as System.Windows.Shapes.Ellipse;
+                    canvas.Children.Remove(ellipse);
                 }
             }
         }

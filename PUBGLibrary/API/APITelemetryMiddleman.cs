@@ -4,6 +4,7 @@
 //
 //    var TelemetryPhrase = TelemetryPhrase.FromJson(jsonString);
 
+#pragma warning disable 1591 //Supresses the need to comment every varible
 namespace PUBGLibrary.API
 {
     using System;
@@ -216,7 +217,9 @@ namespace PUBGLibrary.API
         public double? IsGame { get; set; }
     }
 
+#pragma warning disable IDE1006 // Naming Styles
     public partial class gameState
+#pragma warning restore IDE1006 // Naming Styles
     {
         [JsonProperty("elapsedTime")]
         public int? ElapsedTime { get; set; }
@@ -419,6 +422,7 @@ namespace PUBGLibrary.API
         Dacia_A_04_v2_C,
         DummyTransportAircraft_C,
         ParachutePlayer_C,
+        PG117_A_01_C,
         Empty
     }
     
@@ -756,6 +760,7 @@ namespace PUBGLibrary.API
                 case "DummyTransportAircraft_C": return VehicleId.DummyTransportAircraft_C;
                 case "": return VehicleId.Empty;
                 case "ParachutePlayer_C": return VehicleId.ParachutePlayer_C;
+                case "PG117_A_01_C": return VehicleId.PG117_A_01_C;
                 default: return null;
             }
         }
@@ -806,6 +811,7 @@ namespace PUBGLibrary.API
                 case VehicleId.DummyTransportAircraft_C: serializer.Serialize(writer, "DummyTransportAircraft_C"); break;
                 case VehicleId.Empty: serializer.Serialize(writer, ""); break;
                 case VehicleId.ParachutePlayer_C: serializer.Serialize(writer, "ParachutePlayer_C"); break;
+                case VehicleId.PG117_A_01_C: serializer.Serialize(writer, "PG117_A_01_C"); break;
             }
         }
     }
@@ -913,3 +919,4 @@ namespace PUBGLibrary.API
         };
     }
 }
+#pragma warning restore 1591

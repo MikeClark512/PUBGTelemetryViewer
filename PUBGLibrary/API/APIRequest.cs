@@ -1,5 +1,6 @@
-﻿using System;
-using System.ComponentModel;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -11,10 +12,18 @@ namespace PUBGLibrary.API
     /// </summary>
     public class APIRequest
     {
+        /// <summary>
+        /// The match requested
+        /// </summary>
         public APIMatch Match;
+        /// <summary>
+        /// The telemetry data from the requested match
+        /// </summary>
         public APITelemetry Telemetry;
+        /// <summary>
+        /// If a exception happens during the request, it will be stored in this varible
+        /// </summary>
         public WebException exception;
-        public string JSONString;
         /// <summary>
         /// Requests a single match from the PUBG Developer API
         /// </summary>
@@ -44,8 +53,7 @@ namespace PUBGLibrary.API
                         {
                             var myStreamReader = new StreamReader(responseStream, Encoding.Default);
                             
-                            APIRequest.JSONString = myStreamReader.ReadToEnd();
-                            APIRequest.Match = MatchPhraser(APIRequest.JSONString);
+                            APIRequest.Match = MatchPhraser(myStreamReader.ReadToEnd());
                             using (WebClient client = new WebClient())
                             {
                                 APIRequest.Telemetry = TelemetryPhraser(client.DownloadString(APIRequest.Match.TelemetryURL));
@@ -66,15 +74,21 @@ namespace PUBGLibrary.API
             }
             return APIRequest;
         }
-        public APIRequest RequestFilteredMatches(string APIKey, string PlatformRegion, string filterstring)
+        /// <summary>
+        /// Requests a single user from the PUBG Developer API
+        /// </summary>
+        /// <param name="APIKey">The API key to use during the request</param>
+        /// <param name="PlatformRegion">The Platform-Region to search (i.e pc-na, xbox-eu)</param>
+        /// <param name="AccountID">The Account ID to look up (i.e account.a417e7c0271d4fc88f307e355142dc7)</param>
+        public APIUser RequestSingleUser(string APIKey, string PlatformRegion, string AccountID)
         {
             APIStatus status = new APIStatus();
-            APIRequest APIRequest = new APIRequest();
+            APIUser user = new APIUser();
             if (status.bIsOnline)
             {
                 try
                 {
-                    string APIURL = "https://api.playbattlegrounds.com/shards/" + PlatformRegion + "/matches/?" + filterstring;
+                    string APIURL = "https://api.playbattlegrounds.com/shards/" + PlatformRegion + "/players/" + AccountID;
                     var webRequest = WebRequest.Create(APIURL);
                     var HTTPAPIRequest = (HttpWebRequest)webRequest;
                     HTTPAPIRequest.PreAuthenticate = true;
@@ -87,57 +101,92 @@ namespace PUBGLibrary.API
                         using (var responseStream = APIResponse.GetResponseStream())
                         {
                             var myStreamReader = new StreamReader(responseStream, Encoding.Default);
-
-                            APIRequest.JSONString = myStreamReader.ReadToEnd();
-                            //APIRequest.Match = MatchPhraser(APIRequest.JSONString);
-                            //using (WebClient client = new WebClient())
-                            //{
-                            //    APIRequest.Telemetry = TelemetryPhraser(client.DownloadString(APIRequest.Match.TelemetryURL));
-                            //}
-                            return APIRequest;
-
+                            return UserPhraser(myStreamReader.ReadToEnd());
                         }
                     }
                 }
                 catch (WebException e)
                 {
-                    APIRequest = new APIRequest
+                    user = new APIUser
                     {
-                        exception = e
+                        WebException = e
                     };
-                    return APIRequest;
+                    return user;
                 }
             }
-            return APIRequest;
+            return user;
         }
-        public APIRequest RequestFilteredMatches(
-            string APIKey,
-            string PlatformRegion,
-            FilterType filterTypeA,
-            string FilterDataA,
-            FilterType filterTypeB = FilterType.None,
-            string FilterDataB = "",
-            FilterType filterTypeC = FilterType.None,
-            string FilterDataC = ""
-            )
+        /// <summary>
+        /// Requests multi users from the PUBG Developer API
+        /// </summary>
+        /// <param name="APIKey">The API key to use during the request</param>
+        /// <param name="PlatformRegion">The Platform-Region to search (i.e pc-na, xbox-eu)</param>
+        /// <param name="ID">The list of PUBG Names or AccountIDs to search</param>
+        /// <param name="SearchType"></param>
+        /// <returns></returns>
+        public List<APIUser> RequestMultiUser(string APIKey, string PlatformRegion, List<string> ID, UserSearchType SearchType = UserSearchType.PUBGName)
         {
-            StringBuilder filterbuild = new StringBuilder();
-            filterbuild.Append(API.GetEnumDescription(filterTypeA)).Append(FilterDataA);
-            Console.WriteLine("https://api.playbattlegrounds.com/shards/" + PlatformRegion + "/matches/?" + filterbuild.ToString());
-            return RequestFilteredMatches(APIKey, PlatformRegion, filterbuild.ToString());
-            //if (filterTypeB != FilterType.None)
-            //{
-            //    filterbuild.Append("&").Append(API.GetEnumDescription(filterTypeB)).Append(FilterDataB);
-            //}
-            //if (filterTypeC != FilterType.None)
-            //{
-            //    filterbuild.Append("&").Append(API.GetEnumDescription(filterTypeC)).Append(FilterDataC);
-            //}
+            string filterstring = string.Empty;
+            switch (SearchType)
+            {
+                case UserSearchType.PUBGName:
+                    filterstring = "?filter[playerNames]=";
+                    break;
+                case UserSearchType.AccountID:
+                    filterstring = "?filter[playerIds]=";
+                    break;
+            }
+
+            
+            List<APIUser> users = new List<APIUser>();
+            APIStatus status = new APIStatus();
+            if (status.bIsOnline)
+            {
+                try
+                {
+                    string APIURL = "https://api.playbattlegrounds.com/shards/" + PlatformRegion + "/players" + filterstring + string.Join(",",ID.ToArray());
+                    var webRequest = WebRequest.Create(APIURL);
+                    var HTTPAPIRequest = (HttpWebRequest)webRequest;
+                    HTTPAPIRequest.PreAuthenticate = true;
+                    HTTPAPIRequest.Headers.Add("Authorization", "Bearer " + APIKey);
+                    HTTPAPIRequest.Headers.Add("Access-Control-Allow-Origins", "*");
+                    HTTPAPIRequest.Headers.Add("Access-Control-Expose-Headers", "Content-Length");
+                    HTTPAPIRequest.Accept = "application/json";
+                    using (var APIResponse = HTTPAPIRequest.GetResponse())
+                    {
+                        using (var responseStream = APIResponse.GetResponseStream())
+                        {
+                            var myStreamReader = new StreamReader(responseStream, Encoding.Default);
+                            foreach (JObject jsonuser in JObject.Parse(myStreamReader.ReadToEnd())["data"])
+                            {
+                                users.Add(UserPhraser(jsonuser));
+                            }
+                        }
+                    }
+                }
+                catch (WebException e)
+                {
+                    APIUser user = new APIUser
+                    {
+                        WebException = e
+                    };
+                    users.Add(user);
+                }
+            }
+            return users;
         }
+        /// <summary>
+        /// Parses the match JSON string from the API
+        /// </summary>
+        /// <param name="JSONstring">The match JSON string to parse</param>
+        /// <returns></returns>
         public APIMatch MatchPhraser(string JSONstring)
         {
             var jsonmatch = Phraser.FromJson(JSONstring);
-            APIMatch Match = new APIMatch();
+            APIMatch Match = new APIMatch
+            {
+                BaseJSON = JSONstring
+            };
             foreach (var item in jsonmatch.Included)
             {
                 if (item.Type == DatumType.Participant)
@@ -182,10 +231,18 @@ namespace PUBGLibrary.API
             }
             return Match;
         }
+        /// <summary>
+        /// Parses the telemetry JSON string from the API
+        /// </summary>
+        /// <param name="JSONstring">The telemetry JSON string to parse</param>
+        /// <returns></returns>
         public APITelemetry TelemetryPhraser(string JSONstring)
         {
             var jsontelemetry = TelemetryPhrase.FromJson(JSONstring);
-            APITelemetry Telemetry = new APITelemetry();
+            APITelemetry Telemetry = new APITelemetry
+            {
+                BaseJSON = JSONstring
+            };
             foreach (TelemetryPhrase telem in jsontelemetry)
             {
                 switch (telem.T)
@@ -310,6 +367,7 @@ namespace PUBGLibrary.API
                         logItemDrop.DroppedItem.ItemID = telem.Item.ItemId;
                         logItemDrop.DroppedItem.StackCount = (int)telem.Item.StackCount;
                         logItemDrop.DroppedItem.SubCategroy = telem.Item.SubCategory;
+                        logItemDrop.DateTimeOffset = (DateTimeOffset)telem.D;
                         Telemetry.LogItemDropList.Add(logItemDrop);
                         break;
                     case T.LogItemEquip:
@@ -326,6 +384,7 @@ namespace PUBGLibrary.API
                         logItemEquip.EquipedItem.ItemID = telem.Item.ItemId;
                         logItemEquip.EquipedItem.StackCount = (int)telem.Item.StackCount;
                         logItemEquip.EquipedItem.SubCategroy = telem.Item.SubCategory;
+                        logItemEquip.DateTimeOffset = (DateTimeOffset)telem.D;
                         Telemetry.LogItemEquipList.Add(logItemEquip);
                         break;
                     case T.LogItemPickup:
@@ -342,6 +401,7 @@ namespace PUBGLibrary.API
                         logItemPickup.PickedupItem.ItemID = telem.Item.ItemId;
                         logItemPickup.PickedupItem.StackCount = (int)telem.Item.StackCount;
                         logItemPickup.PickedupItem.SubCategroy = telem.Item.SubCategory;
+                        logItemPickup.DateTimeOffset = (DateTimeOffset)telem.D;
                         Telemetry.LogItemPickupList.Add(logItemPickup);
                         break;
                     case T.LogItemUnequip:
@@ -358,6 +418,7 @@ namespace PUBGLibrary.API
                         logItemUnequip.UnequipedItem.ItemID = telem.Item.ItemId;
                         logItemUnequip.UnequipedItem.StackCount = (int)telem.Item.StackCount;
                         logItemUnequip.UnequipedItem.SubCategroy = telem.Item.SubCategory;
+                        logItemUnequip.DateTimeOffset = (DateTimeOffset)telem.D;
                         Telemetry.LogItemUnequipList.Add(logItemUnequip);
                         break;
                     case T.LogItemUse:
@@ -374,6 +435,7 @@ namespace PUBGLibrary.API
                         logItemUse.UsedItem.ItemID = telem.Item.ItemId;
                         logItemUse.UsedItem.StackCount = (int)telem.Item.StackCount;
                         logItemUse.UsedItem.SubCategroy = telem.Item.SubCategory;
+                        logItemUse.DateTimeOffset = (DateTimeOffset)telem.D;
                         Telemetry.LogItemUseList.Add(logItemUse);
                         break;
                     case T.LogMatchDefinition:
@@ -507,8 +569,8 @@ namespace PUBGLibrary.API
                         logPlayerPosition.LoggedPlayer.TeamID = (int)telem.Character.TeamId;
                         logPlayerPosition.ElapsedTime = (int)telem.ElapsedTime;
                         logPlayerPosition.numAlivePlayers = (int)telem.NumAlivePlayers;
-                        logPlayerPosition.UnderThirtyFPS = (int)telem.Under30Fps;
-                        logPlayerPosition.UnderSixtyFPS = (int)telem.Under60Fps;
+                        //logPlayerPosition.UnderThirtyFPS = (int)telem.Under30Fps;
+                        //logPlayerPosition.UnderSixtyFPS = (int)telem.Under60Fps;
                         logPlayerPosition.DateTimeOffset = (DateTimeOffset)telem.D;
                         Telemetry.LogPlayerPositionList.Add(logPlayerPosition);
                         break;
@@ -551,6 +613,7 @@ namespace PUBGLibrary.API
                         logVehicleDestroy.DestroyedVehicle.healthPercent = (double)telem.Vehicle.HealthPercent;
                         logVehicleDestroy.DestroyedVehicle.vehicleID = (VehicleId)telem.Vehicle.VehicleId;
                         logVehicleDestroy.DestroyedVehicle.vehicleType = telem.Vehicle.VehicleType;
+                        logVehicleDestroy.DateTimeOffset = (DateTimeOffset)telem.D;
                         Telemetry.LogVehicleDestroyList.Add(logVehicleDestroy);
                         break;
                     case T.LogVehicleLeave:
@@ -567,6 +630,7 @@ namespace PUBGLibrary.API
                         logVehicleLeave.Vehicle.healthPercent = (double)telem.Vehicle.HealthPercent;
                         logVehicleLeave.Vehicle.vehicleID = (VehicleId)telem.Vehicle.VehicleId;
                         logVehicleLeave.Vehicle.vehicleType = telem.Vehicle.VehicleType;
+                        logVehicleLeave.DateTimeOffset = (DateTimeOffset)telem.D;
                         Telemetry.LogVehicleLeaveList.Add(logVehicleLeave);
                         break;
                     case T.LogVehicleRide:
@@ -583,30 +647,67 @@ namespace PUBGLibrary.API
                         logVehicleRide.Vehicle.healthPercent = (double)telem.Vehicle.HealthPercent;
                         logVehicleRide.Vehicle.vehicleID = (VehicleId)telem.Vehicle.VehicleId;
                         logVehicleRide.Vehicle.vehicleType = telem.Vehicle.VehicleType;
+                        logVehicleRide.DateTimeOffset = (DateTimeOffset)telem.D;
                         Telemetry.LogVehicleRideList.Add(logVehicleRide);
                         break;
                 }
             }
             return Telemetry;
         }
+        /// <summary>
+        /// Pharses user data from JSON from the API
+        /// </summary>
+        /// <param name="JSONstring"></param>
+        /// <returns></returns>
+        public APIUser UserPhraser(string JSONstring)
+        {
+            APIUser user = new APIUser
+            {
+                BaseJSON = JSONstring
+            };
+            JObject parsed = JObject.Parse(JSONstring);
+            user.AccountID = (string)parsed["data"]["id"];
+            user.PUBGName = (string)parsed["data"]["attributes"]["name"];
+            user.PRS = (string)parsed["data"]["attributes"]["shardId"];
+            foreach (JObject matchitem in parsed["data"]["relationships"]["matches"]["data"])
+            {
+                user.ListOfMatches.Add((string)matchitem["id"]);
+            }
+            return user;
+        }
+        /// <summary>
+        /// Pharses user data from a JObject from the API
+        /// </summary>
+        /// <param name="userdata">JObject to pharse</param>
+        /// <returns></returns>
+        public APIUser UserPhraser(JObject userdata)
+        {
+            APIUser user = new APIUser
+            {
+                BaseJSON = userdata.ToString()
+            };
+            user.AccountID = (string)userdata["id"];
+            user.PUBGName = (string)userdata["attributes"]["name"];
+            user.PRS = (string)userdata["attributes"]["shardId"];
+            foreach (JObject matchitem in userdata["relationships"]["matches"]["data"])
+            {
+                user.ListOfMatches.Add((string)matchitem["id"]);
+            }
+            return user;
+        }
     }
-    public enum FilterType
+    /// <summary>
+    /// The type of search to perform when doing a multiuser search
+    /// </summary>
+    public enum UserSearchType
     {
-        None,
         /// <summary>
-        /// Filter by player IDs
+        /// Searching using PUBG names
         /// </summary>
-        [Description("filter[playerIds]=")]
-        playerIDs,
+        PUBGName,
         /// <summary>
-        /// Filter by player names
+        /// Searching using
         /// </summary>
-        [Description("filter[playerNames]=")]
-        playerNames,
-        /// <summary>
-        /// Filter by game mode
-        /// </summary>
-        [Description("filter[gameMode]=")]
-        GameMode,
+        AccountID
     }
 }

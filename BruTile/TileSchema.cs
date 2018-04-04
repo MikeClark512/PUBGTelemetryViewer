@@ -98,23 +98,41 @@ namespace BruTile
         }*/
         #endregion
 
-        public TileSchema()
+        public TileSchema(int map)
         {
-            //double[] resolutions = new double[] { 256, 128, 64, 32, 16, 8, 4, 2 };
-            double[] resolutions = new double[] { 128,64,32,16,8,4 };
+            double[] resolutions = new double[] { 512,256,128,64, };
             foreach (double resolution in resolutions) this.Resolutions.Add(resolution);
-            this.Height = 256;
-            this.Width = 256;
+            this.Height = 1024;
+            this.Width = 1024;
             //this.Height =  396.87f;
             //this.Width = 396.8f;
-            this.Extent = new Extent(-32768, -32768, 32768, 32768);
-            // this.Extent = new Extent(-812775, -812775, 812775, 812775);
-            //this.Extent = new Extent(-524288, -524288, 524288, 524288);
-            //this.Extent = new Extent(-10000000, -10000000, 10000000, 10000000);
+            if(map == 0)
+                this.Extent = new Extent(-524288, -524288, 524288, 524288);
+            else if(map == 1)
+                this.Extent = new Extent(-524288, -524288, 524288, 524288);
+
             this.OriginX = 0;
             this.OriginY = 0;
             this.Format = "png";
         }
+
+        //public TileSchema()
+        //{
+        //    //double[] resolutions = new double[] { 256, 128, 64, 32, 16, 8, 4, 2 };
+        //    double[] resolutions = new double[] { 128, 64, 32, 16, 8, 4 };
+        //    foreach (double resolution in resolutions) this.Resolutions.Add(resolution);
+        //    this.Height = 256;
+        //    this.Width = 256;
+        //    //this.Height =  396.87f;
+        //    //this.Width = 396.8f;
+        //    this.Extent = new Extent(-32768, -32768, 32768, 32768);
+        //    //  this.Extent = new Extent(-812775, -812775, 812775, 812775);
+        //    //this.Extent = new Extent(-524288, -524288, 524288, 524288);
+        //    //this.Extent = new Extent(-10000000, -10000000, 10000000, 10000000);
+        //    this.OriginX = 0;
+        //    this.OriginY = 0;
+        //    this.Format = "png";
+        //}
 
         #region Public Methods
 

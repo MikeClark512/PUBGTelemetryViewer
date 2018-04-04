@@ -7,6 +7,16 @@ namespace BruTile.UI
 {
     public class Marker
     {
+        public enum Eventtype
+        {
+            Marker,
+            Plane_leaving,
+            Parachute_leaving,
+            Boosting,
+            Heal,
+
+        };
+
         public bool Visible { get; private set; }
         
         private double x;
@@ -30,13 +40,15 @@ namespace BruTile.UI
         public string Text { get; private set; }
         public string Description { get; private set; }
         public int ZIndex { get; private set; }
-        public string Type { get; private set; }
-        public float elapsedtime { get; private set; }
+        public Eventtype Type { get; private set; }
+        public DateTimeOffset timeOffset { get; private set; }
+        public int ElapsedTime { get; private set; }
 
-        public Marker(double x, double y, bool visible, int imageIndex,string type, float time, string text, string description, int zIndex)
+
+        public Marker(double x, double y, bool visible, int imageIndex, DateTimeOffset time2 , string text, string description, int zIndex, Eventtype type = Eventtype.Marker)
         {
-            double xt = ((x / 32768) * 1312);
-            double yt = ((y / 32768) * 1312);
+            double xt = ((x / 50) * 32);
+            double yt = ((y / 50) * 32);
 
             ImageIndex = imageIndex;
             Text = text;
@@ -45,7 +57,25 @@ namespace BruTile.UI
             this.y = Math.Round(-yt);
             Visible = visible;
             Type = type;
-            elapsedtime = time;
+
+            timeOffset = time2;
+            ZIndex = zIndex;
+        }
+
+        public Marker(double x, double y, bool visible, int imageIndex, DateTimeOffset time2, int time, string text, string description, int zIndex, Eventtype type = Eventtype.Marker)
+        {
+            double xt = ((x / 50) * 32);
+            double yt = ((y / 50) * 32);
+
+            ImageIndex = imageIndex;
+            Text = text;
+            Description = description;
+            this.x = Math.Round(xt);
+            this.y = Math.Round(-yt);
+            Visible = visible;
+            Type = type;
+            this.ElapsedTime = time;
+            timeOffset = time2;
             ZIndex = zIndex;
         }
     }

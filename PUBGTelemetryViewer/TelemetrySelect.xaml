@@ -1,0 +1,30 @@
+﻿<Window x:Class="PUBGTelemetryViewer.TelemetrySelect"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PUBGTelemetryViewer"
+        mc:Ignorable="d"
+        Title="TelemetrySelect" Height="264.789" Width="630.23" ResizeMode="NoResize">
+    <Grid>
+        <TextBox x:Name="playername" HorizontalAlignment="Left" Height="23" Margin="10,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Player name" HorizontalAlignment="Left" Margin="10,14,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="matchsearch" Content="Search" HorizontalAlignment="Left" Margin="135,40,0,0" VerticalAlignment="Top" Width="50" Height="23" Click="Button_Click"/>
+        <DataGrid x:Name="matchlist" Height="183" Margin="210,40,19.897,0" VerticalAlignment="Top" RowHeaderWidth="0" CanUserAddRows="False" CanUserDeleteRows="False" CanUserResizeRows="False" ColumnWidth="*" IsReadOnly="True" MouseDoubleClick="matchlist_MouseDoubleClick"/>
+        <WrapPanel x:Name="warp" HorizontalAlignment="Left" Height="123" Margin="15,95,0,0" VerticalAlignment="Top" Width="139" Orientation="Vertical">
+            <RadioButton Content="pc-na" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            <RadioButton Content="pc-eu" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            <RadioButton Content="pc-krjp" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            <RadioButton Content="pc-as" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            <RadioButton Content="pc-oc" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            <RadioButton Content="pc-sa" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            <RadioButton Content="pc-sea" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            <RadioButton Content="pc-kakao" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            <RadioButton Content="xbox-na" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            <RadioButton Content="xbox-eu" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            <RadioButton Content="xbox-as" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+            <RadioButton Content="xbox-oc" Checked="RadioButton_Checked" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}}"/>
+        </WrapPanel>
+
+    </Grid>
+</Window>

@@ -20,7 +20,7 @@ namespace PUBGLibrary.API
         /// <summary>
         /// The base class for the PUBG API
         /// </summary>
-        /// <param name="APIKey">The API key to use during requests</param>
+        /// <param name="API_Key">The API key to use during requests</param>
         public API(string API_Key)
         {
             APIKey = API_Key;
@@ -93,6 +93,34 @@ namespace PUBGLibrary.API
             }
 
         }
+        /// <summary>
+        /// Request a single user using their AccountID
+        /// </summary>
+        /// <param name="AccountID"></param>
+        /// <param name="platformRegionShard"></param>
+        /// <returns></returns>
+        public APIUser RequestSingleUser(string AccountID, PlatformRegionShard platformRegionShard)
+        {
+            APIRequest request = new APIRequest();
+            return request.RequestSingleUser(APIKey, GetEnumDescription(platformRegionShard), AccountID);
+        }
+        /// <summary>
+        /// Reuest multiple users using either their Account ID or their PUBG Name
+        /// </summary>
+        /// <param name="IDSToSearch">The list of names/ID to search</param>
+        /// <param name="platformRegionShard">The Platform-Region to search</param>
+        /// <param name="userSearchType">The type of search</param>
+        /// <returns></returns>
+        public List<APIUser> RequestMultiUser(List<string> IDSToSearch, PlatformRegionShard platformRegionShard, UserSearchType userSearchType = UserSearchType.PUBGName)
+        {
+            APIRequest request = new APIRequest();
+            return request.RequestMultiUser(APIKey, GetEnumDescription(platformRegionShard), IDSToSearch, userSearchType);
+        }
+        /// <summary>
+        /// Gets the description tag from Enums
+        /// </summary>
+        /// <param name="value">The enum value you want to read</param>
+        /// <returns></returns>
         public static string GetEnumDescription(Enum value)
         {
             FieldInfo fi = value.GetType().GetField(value.ToString());
@@ -114,7 +142,6 @@ namespace PUBGLibrary.API
     /// </summary>
     public enum PlatformRegionShard
     {
-        Unknown,
         /// <summary>
         /// PC North America
         /// </summary>
@@ -184,7 +211,7 @@ namespace PUBGLibrary.API
         /// <summary>
         /// Xbox Oceania
         /// </summary>
-        [JsonProperty("xbox-as")]
+        [JsonProperty("xbox-oc")]
         [Description("xbox-oc")]
         Xbox_OC
     }

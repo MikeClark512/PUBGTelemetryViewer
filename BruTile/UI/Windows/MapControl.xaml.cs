@@ -48,6 +48,9 @@ namespace BruTile.UI.Windows
         private Renderer renderer = new Renderer();
         public event EventHandler ErrorMessageChanged;
 
+        public static bool warmuplog = true;
+
+
         private string _coords;
         public string Coords
         {
@@ -205,7 +208,7 @@ namespace BruTile.UI.Windows
             if(rootLayer != null)
             {
                 rootLayer.MarkerCache.Clear();
-
+                rootLayer.EventCache.Clear();
                 rootLayer.LineCache.Clear();
             }
         }
@@ -322,6 +325,16 @@ namespace BruTile.UI.Windows
                 this.Transform.Width = (float)this.ActualWidth;
                 this.Transform.Height = (float)this.ActualHeight;
             }
+
+            rect.Rect = new Rect(0f, 0f, this.ActualWidth, this.ActualHeight);
+            this.canvas2.Clip = rect;
+            this.canvas2.Width = this.ActualWidth;
+            this.canvas2.Height = this.ActualHeight;
+            if (this.Transform != null)
+            {
+                this.Transform.Width = (float)this.ActualWidth;
+                this.Transform.Height = (float)this.ActualHeight;
+            }
         }
 
         private void MapControl_MouseUp(object sender, MouseButtonEventArgs e)
@@ -387,11 +400,10 @@ namespace BruTile.UI.Windows
         {
             Point p = transform.MapToWorld(pos.X, pos.Y);
             p = new Point(Math.Round(p.X), Math.Round(-p.Y));
-
             if (p.X < 0) p.X = 0;
-            if (p.X > 32768) p.X = 32768;
+            if (p.X > 524288) p.X = 524288;
             if (p.Y < 0) p.Y = 0;
-            if (p.Y > 32768) p.Y = 32768;
+            if (p.Y > 524288) p.Y = 524288;
             Coords = string.Format("X: {0}\nY: {1}", p.X, p.Y);
         }
 
@@ -438,7 +450,7 @@ namespace BruTile.UI.Windows
                 if ((this.renderer != null) && (this.rootLayer != null))
                 {
                     
-                    this.renderer.Render(this.canvas, this.canvas2, this.rootLayer.Schema, this.transform, this.rootLayer.MemoryCache,this.rootLayer.ellipsesCache, this.rootLayer.MarkerCache, this.rootLayer.LineCache);
+                    this.renderer.Render(this.canvas, this.canvas2, this.rootLayer.Schema, this.transform, this.rootLayer.MemoryCache,this.rootLayer.ellipsesCache, this.rootLayer.MarkerCache, this.rootLayer.EventCache);
                 }
                 this.update = false;
             }

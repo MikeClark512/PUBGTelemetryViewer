@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PUBGTelemetryViewer"
         xmlns:Windows="clr-namespace:BruTile.UI.Windows;assembly=BruTile" x:Class="PUBGTelemetryViewer.MainWindow"
         mc:Ignorable="d"
-        Title="PUBG Telemetry Viewer v0.1" Height="1024" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1602.5" WindowStartupLocation="CenterScreen">
+        Title="PUBG Telemetry Viewer v0.2" Height="1024" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1602.5" WindowStartupLocation="CenterScreen">
     <Grid x:Name="MainWindow1">
 
         <Windows:MapControl x:Name="map" VerticalAlignment="Stretch" Background="#FF0D2E3D" Margin="0,0,0.5,0"/>
@@ -29,13 +29,16 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Button Grid.ColumnSpan="2" x:Name="loadButton" Click="LoadButton_Click" Content="Load Json File"/>
-                <Button x:Name="Toggle_Types" Margin="0,0,0,30" Grid.ColumnSpan="2" Grid.Row="2" Content="Toggle Types" />
-                <Button Grid.Row="2" x:Name="zoomInButton" Click="ZoomInButton_Click" Content="Zoom In" RenderTransformOrigin="0.51,-0.367" Margin="0,24,0,5" Grid.RowSpan="3"/>
-                <Button Grid.Row="2" Grid.Column="1" x:Name="zoomOutButton" Click="ZoomOutButton_Click" Content="Zoom Out" Margin="0,24,0,5" Grid.RowSpan="3"/>
+                <Button Grid.ColumnSpan="2" x:Name="loadButton" Click="LoadButton_Click" Content="Load File" Margin="0,0,67,54" Grid.RowSpan="3"/>
+                <Button x:Name="Toggle_Types" Margin="0,20,0,30" Grid.ColumnSpan="2" Grid.Row="2" Content="Toggle Types" IsEnabled="False" />
+                <Button Grid.Row="2" x:Name="zoomInButton" Click="ZoomInButton_Click" Content="Zoom In" RenderTransformOrigin="0.51,-0.367" Margin="0,44,67,5" Grid.ColumnSpan="2"/>
+                <Button Grid.Row="2" Grid.Column="1" x:Name="zoomOutButton" Click="ZoomOutButton_Click" Content="Zoom Out" Margin="0.5,44,0,5"/>
+                <Button x:Name="loadButton_Copy" Click="loadButton_Copy_Click" Content="Load API" Margin="0.5,0,0,54" Grid.RowSpan="3" Grid.Column="1"/>
             </Grid>
         </Border>
         <ListBox x:Name="playerlist" HorizontalAlignment="Left" Margin="29,107,0,396" Width="133" SelectionChanged="playerlist_SelectionChanged"/>
+        <CheckBox x:Name="cb_warmuplog" Content="Show Warmup Infos" HorizontalAlignment="Left" Margin="29,602,0,0" VerticalAlignment="Top" Width="133" Checked="cb_warmuplog_Checked" IsChecked="True" Unchecked="cb_warmuplog_Unchecked" IsEnabled="False"/>
+        <Button x:Name="btn_settings" Content="Settings" Margin="0,963,1509.5,0" RenderTransformOrigin="-0.22,0.251" Click="btn_settings_Click" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
 
     </Grid>
 </Window>

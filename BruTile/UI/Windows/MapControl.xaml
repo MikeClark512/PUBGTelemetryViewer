@@ -45,7 +45,7 @@
             
         </Border>
 
-        <Border Width="92.509" BorderThickness="1,1,1,0" BorderBrush="#ffffff" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,8,8" Background="#7FFFFFFF">
+        <Border Width="126.509" BorderThickness="1,1,1,0" BorderBrush="#ffffff" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,8,8" Background="#7FFFFFFF">
             <StackPanel>
                 <TextBlock x:Name="coordsDisplay" FontSize="20" Margin="8">
                     X: 0 <LineBreak /> Y: 0

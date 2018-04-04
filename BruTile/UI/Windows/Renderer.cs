@@ -41,31 +41,42 @@ namespace BruTile.UI.Windows
 
         public IMarkerControl ActiveMarker { get; private set; }
 
-        public void Render(Canvas canvas,Canvas canvas2, TileSchema schema, ITransform transform, MemoryCache<MemoryStream> cache, List<Ellipse> ellipseCache, List<Marker> markerCache, List<System.Windows.Shapes.Line> line)
+        public void Render(Canvas canvas,Canvas canvas2, TileSchema schema, ITransform transform, MemoryCache<MemoryStream> cache, List<Ellipse> ellipseCache, List<Marker> markerCache, List<Marker> eventCache)
         {
             CollapseAll(canvas);
+            CollapseAll(canvas2);
             int level = BruTile.Utilities.GetNearestLevel(schema.Resolutions, transform.Resolution);
             DrawRecursive(canvas, schema, transform, cache, transform.Extent, level);
-            DrawMarkers(canvas, schema, transform, markerCache, transform.Extent, level);
-            DrawLines(canvas, schema, transform, line, markerCache, transform.Extent, level);
-           // DrawCircle(canvas, schema, transform, ellipseCache, transform.Extent, level);
+           // DrawMarkers(canvas, schema, transform, markerCache, transform.Extent, level);
+            DrawLines(canvas, schema, transform, markerCache, transform.Extent, level);
+            // DrawCircle(canvas, schema, transform, ellipseCache, transform.Extent, level);
+            DrawEvents(canvas2, schema, transform, eventCache, transform.Extent, level);
             RemoveCollapsed(canvas);
             RemoveCollapsed(canvas2);
             
         }
 
-        public void DrawLines(Canvas canvas, TileSchema schema, ITransform transform, List<System.Windows.Shapes.Line> cache, List<Marker> cachemarker, Extent extent, int level)
+        public void DrawLines(Canvas canvas, TileSchema schema, ITransform transform, List<Marker> cachemarker, Extent extent, int level)
         {
+            cachemarker.Sort(
+        delegate (Marker p1, Marker p2)
+        {
+            return p1.timeOffset.CompareTo(p2.timeOffset);
+        });
+
             for (int i = 0; i < cachemarker.Count - 1; i++)
             {
                 if (cachemarker.Count == 0)
-                    return;
+                    continue;
+
+                if (!MapControl.warmuplog && cachemarker[i].ElapsedTime <= 0)
+                    continue;
                 Point p = transform.WorldToMap(cachemarker[i].X, cachemarker[i].Y);
                 Point p2 = transform.WorldToMap(cachemarker[i+1].X, cachemarker[i+1].Y);
                 var line = new System.Windows.Shapes.Line();
-                if (cachemarker[i].Type == "Vehicle leave")
-                    line.Stroke = Brushes.Blue;
-                else
+                //if (cachemarker[i].Type == "Vehicle leave")
+                //    line.Stroke = Brushes.Blue;
+                //else
                     line.Stroke = System.Windows.Media.Brushes.Red;
                 line.X1 = p.X;
                 line.X2 = p2.X;
@@ -197,21 +208,21 @@ namespace BruTile.UI.Windows
                     Canvas.SetZIndex(marker, m.ZIndex);
                     Canvas.SetLeft(marker, p.X);
                     Canvas.SetTop(marker, p.Y);
-                    
-                    //if (m.Points != null)
-                    //{
-                    //    if (!(marker.RenderTransform is ScaleTransform))
-                    //    {
-                    //        marker.RenderTransform = new ScaleTransform(1.0 / transform.Resolution, 1.0 / transform.Resolution);
-                    //    }
-                    //    else
-                    //    {
-                    //        ((ScaleTransform)marker.RenderTransform).ScaleX = 1.0 / transform.Resolution;
-                    //        ((ScaleTransform)marker.RenderTransform).ScaleY = 1.0 / transform.Resolution;
-                    //    }
-                    //}
 
-                    double factor = 1;
+                //if (m.Points != null)
+                //{
+                //    if (!(marker.RenderTransform is ScaleTransform))
+                //    {
+                //        marker.RenderTransform = new ScaleTransform(1.0 / transform.Resolution, 1.0 / transform.Resolution);
+                //    }
+                //    else
+                //    {
+                //        ((ScaleTransform)marker.RenderTransform).ScaleX = 1.0 / transform.Resolution;
+                //        ((ScaleTransform)marker.RenderTransform).ScaleY = 1.0 / transform.Resolution;
+                //    }
+                //}
+
+                double factor = 1;
                     if (!(marker.RenderTransform is ScaleTransform))
                     {
                         marker.RenderTransform = new ScaleTransform(1.0 / transform.Resolution * factor, 1.0 / transform.Resolution * factor);
@@ -226,6 +237,108 @@ namespace BruTile.UI.Windows
                     marker.Visibility = Visibility.Visible;
 
              //     }
+            }
+        }
+
+        private void DrawEvents(Canvas canvas, TileSchema schema, ITransform transform, List<Marker> cache, Extent extent, int level)
+        {
+
+            foreach (Marker m in cache)
+            {
+
+
+
+                if (m.UIElement == null)
+                {
+                    if (!m.Visible) continue;
+
+                    if (m.Points != null)
+                    {
+                        MarkerControl2 c = new MarkerControl2();
+                        c.Over += new RoutedEventHandler(c_Over);
+                        c.Leave += new RoutedEventHandler(c_Leave);
+                        c.Points = new PointCollection(m.Points);
+
+                        c.Text = m.Text;
+                        c.Description = m.Description;
+
+                        m.UIElement = c;
+                    }
+                    else
+                    {
+                        MarkerControl c = new MarkerControl();
+                        c.Over += new RoutedEventHandler(c_Over);
+                        c.Leave += new RoutedEventHandler(c_Leave);
+                        if (markerImages != null)
+                        {
+                            if (markerImages.ContainsKey(m.ImageIndex))
+                            {
+                                c.Image = markerImages[m.ImageIndex];
+                            }
+                            else if (markerImages.ContainsKey(-1))
+                            {
+                                c.Image = markerImages[-1];
+                            }
+                        }
+
+                        c.Text = m.Text;
+                        c.Description = m.Description;
+
+                        m.UIElement = c;
+                    }
+                }
+
+
+                //MarkerControl marker = m.UIElement as MarkerControl;
+                UIElement marker = m.UIElement as UIElement;
+                marker.Visibility = Visibility.Collapsed;
+
+                if (!m.Visible)
+                {
+                    continue;
+                }
+
+                if (!canvas.Children.Contains(marker))
+                {
+                    canvas.Children.Add(marker);
+                }
+
+                Rect dest = MapTransformHelper.WorldToMap(extent, transform);
+                Point p = transform.WorldToMap(m.X, m.Y);
+                //if (dest.Contains(p))
+                //{
+                Canvas.SetZIndex(marker, m.ZIndex);
+                Canvas.SetLeft(marker, p.X);
+                Canvas.SetTop(marker, p.Y);
+
+                if (m.Points != null)
+                {
+                    if (!(marker.RenderTransform is ScaleTransform))
+                    {
+                        marker.RenderTransform = new ScaleTransform(1.0 / transform.Resolution, 1.0 / transform.Resolution);
+                    }
+                    else
+                    {
+                        ((ScaleTransform)marker.RenderTransform).ScaleX = 1.0 / transform.Resolution;
+                        ((ScaleTransform)marker.RenderTransform).ScaleY = 1.0 / transform.Resolution;
+                    }
+                }
+
+                //double factor = 1;
+                //if (!(marker.RenderTransform is ScaleTransform))
+                //{
+                //    marker.RenderTransform = new ScaleTransform(1.0 / transform.Resolution * factor, 1.0 / transform.Resolution * factor);
+                //}
+                //else
+                //{
+                //    ((ScaleTransform)marker.RenderTransform).ScaleX = 1.0 / transform.Resolution * factor;
+                //    ((ScaleTransform)marker.RenderTransform).ScaleY = 1.0 / transform.Resolution * factor;
+                //}
+
+
+                marker.Visibility = Visibility.Visible;
+
+                //     }
             }
         }
 
@@ -322,14 +435,7 @@ namespace BruTile.UI.Windows
 
             Storyboard storyBoard = new Storyboard();
             storyBoard.Children.Add(animation);
-            storyBoard.Completed += new EventHandler(storyBoard_Completed);
             storyBoard.Begin();
-        }
-
-        static void storyBoard_Completed(object sender, EventArgs e)
-        {
-            //todo: remove that are now invisible.
-           
         }
 
         private static void RemoveCollapsed(Canvas canvas)
@@ -375,6 +481,12 @@ namespace BruTile.UI.Windows
                     System.Windows.Shapes.Ellipse ellipse = element as System.Windows.Shapes.Ellipse;
                     canvas.Children.Remove(ellipse);
                 }
+                else if (element is MarkerControl2)
+                {
+                    MarkerControl2 marker = element as MarkerControl2;
+                    canvas.Children.Remove(marker);
+                }
+
             }
         }
     }

@@ -10,6 +10,9 @@ namespace PUBGLibrary.Replay
     /// </summary>
     public enum Weather
     {
+        /// <summary>
+        /// For unknown weather types
+        /// </summary>
         Unknown,
         [EnumMember(Value = "Sunny Clear")]
         SunnyClear,
@@ -80,7 +83,7 @@ namespace PUBGLibrary.Replay
                 }
             }
         }
-        public PlatformRegionShard KnownRegion = PlatformRegionShard.Unknown;
+        public PlatformRegionShard KnownRegion = PlatformRegionShard.PC_NA;
         public string District;
 
         [JsonProperty("weatherName")]

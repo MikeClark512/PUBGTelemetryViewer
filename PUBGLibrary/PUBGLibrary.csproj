@@ -4,22 +4,44 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>PUBGLibrary</AssemblyName>
     <RootNamespace>PUBGLibrary</RootNamespace>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
     <PackageProjectUrl>https://github.com/EpicKitten/PUBGLibrary</PackageProjectUrl>
     <Description>A .NET Standard PUBG API and Replay library</Description>
     <PackageLicenseUrl>https://github.com/EpicKitten/PUBGLibrary/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/EpicKitten/PUBGLibrary</RepositoryUrl>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <VersionPrefix>1.0.5</VersionPrefix>
+    <ApplicationIcon />
+    <Win32Resource />
+    <Authors>epickitten</Authors>
+    <PackageIconUrl>https://github.com/EpicKitten/PUBGLibrary/raw/master/pubgcsharp.jpg</PackageIconUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\PUBGLibrary.xml</DocumentationFile>
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>TRACE;RELEASE;NETSTANDARD2_0;RELEASE;NETSTANDARD2_0</DefineConstants>
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove=".gitattributes" />
+    <None Remove=".gitignore" />
     <None Remove="LibraryTest.rsls" />
+    <None Remove="LICENSE" />
     <None Remove="NET46LibraryTest.rsls" />
     <None Remove="packages.rsls" />
     <None Remove="PUBGLibrary.sln.rsls" />
+    <None Remove="README.md" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 
 </Project>

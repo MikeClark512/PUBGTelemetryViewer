@@ -10,6 +10,9 @@ C# PUBG Viewer for the newly telemetry file. Heavily under construction.
 -------
 Download the Source or download the latest Release. Start the PUBGTelemetryViewer.exe and either select a JSON Telemetry File or go through the API to get Telemetry Data for a Match.
 
+# Download
+-------
+[Download Current Release](https://github.com/cywq/PUBGTelemetryViewer/releases/tag/v0.2)
 
 # TODO
 -------

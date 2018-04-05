@@ -505,7 +505,7 @@ namespace PUBGLibrary.API
     public class LogPlayerCreate
     {
         public Player Player = new Player();
-        public DateTime Date = new DateTime();
+        public DateTimeOffset Date = new DateTimeOffset();
     }
     /// <summary>
     /// Basic match information about the creation of the match

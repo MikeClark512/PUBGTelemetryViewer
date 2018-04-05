@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace PUBGTelemetryViewer
 {
@@ -27,6 +28,7 @@ namespace PUBGTelemetryViewer
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             MainWindow.apiKey = new TextRange(this.apiKey.Document.ContentStart, this.apiKey.Document.ContentEnd).Text;
+            File.WriteAllText(Directory.GetCurrentDirectory() + @"\apikey.txt", MainWindow.apiKey);
             this.Close();
         }
 

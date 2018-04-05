@@ -49,6 +49,9 @@ namespace BruTile.UI.Windows
         public event EventHandler ErrorMessageChanged;
 
         public static bool warmuplog = true;
+        public static DateTimeOffset matchStartTime;
+        public static DateTimeOffset currentMatchTime;
+        public static DateTimeOffset PlaneDepartureTime;
 
 
         private string _coords;
@@ -450,7 +453,7 @@ namespace BruTile.UI.Windows
                 if ((this.renderer != null) && (this.rootLayer != null))
                 {
                     
-                    this.renderer.Render(this.canvas, this.canvas2, this.rootLayer.Schema, this.transform, this.rootLayer.MemoryCache,this.rootLayer.ellipsesCache, this.rootLayer.MarkerCache, this.rootLayer.EventCache);
+                    this.renderer.Render(MapControl.currentMatchTime,this.canvas, this.canvas2, this.rootLayer.Schema, this.transform, this.rootLayer.MemoryCache,this.rootLayer.ellipsesCache, this.rootLayer.MarkerCache, this.rootLayer.EventCache);
                 }
                 this.update = false;
             }

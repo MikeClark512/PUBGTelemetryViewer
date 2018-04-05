@@ -42,11 +42,11 @@ namespace BruTile.UI
 
         public Ellipse(int time, double x, double y, double radius, bool visible, ZoneType type, int zIndex)
         {
-            double xt = ((x / 32768) * 1312);
-            double yt = ((y / 32768) * 1312);
+            double xt = ((x / 50) * 32);
+            double yt = ((x / 50) * 32);
             this.x = Math.Round(xt);
             this.y = Math.Round(-yt);
-            this.radius = Math.Round(((radius / 32768) * 1312));
+            this.radius = Math.Round(((radius / 50) * 32));
             Visible = visible;
             Type = type;
             this.time = time;

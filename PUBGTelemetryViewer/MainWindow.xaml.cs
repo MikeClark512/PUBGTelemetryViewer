@@ -62,8 +62,22 @@ namespace PUBGTelemetryViewer
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            if(File.Exists("./apikey.txt"))
+            if (File.Exists("./apikey.txt"))
                 apiKey = File.ReadAllText("./apikey.txt");
+            else
+            {
+                MessageBoxResult response = MessageBox.Show(Directory.GetCurrentDirectory() + @"\apikey.txt was not found!" + Environment.NewLine + "Create one?", "Error!", MessageBoxButton.YesNo);
+                if (response == MessageBoxResult.Yes)
+                {
+                    Settings addAPIKey = new Settings();
+                    addAPIKey.ShowDialog();
+                    apiKey = File.ReadAllText(Directory.GetCurrentDirectory() + @"\apikey.txt");
+                }
+                else
+                {
+                    loadButton_Copy.IsEnabled = false;
+                }
+            }
             LoadIcons();
             map.Refresh();
 
@@ -323,17 +337,37 @@ namespace PUBGTelemetryViewer
                 return;
             var selectedplayer = playerlist.SelectedValue.ToString();
             var playerdat = telemetryData.GetPlayerSpecificLog(selectedplayer, SearchType.PUBGName);
-            
+
+            ConstructTimeline(playerdat);
             loadMarkers(playerdat, map.RootLayer.MarkerCache);
             loadEvents(playerdat, map.RootLayer.EventCache);
             map.Refresh();
+        }
+
+
+        private void ConstructTimeline(PlayerSpecificLog player)
+        {
+
+            slider_time.Maximum = Convert.ToInt32(player.LogPlayerLogoutList[0].DateTimeOffset.Subtract(player.LogPlayerCreateList[0].Date).TotalSeconds);
+            slider_time.Value = 1;
+            MapControl.matchStartTime = GetMatchStartTime(player.LogPlayerCreateList);
+            MapControl.PlaneDepartureTime = GetPlaneDeparture(telemetryData);
+        }
+
+        private DateTimeOffset GetMatchStartTime(List<LogPlayerCreate> playerCreate)
+        {
+            return playerCreate[0].Date;
+        }
+
+        private DateTimeOffset GetPlaneDeparture(APITelemetry logMatches)
+        {
+            return logMatches.LogMatchStart.DateTimeOffset;
         }
 
         private void cb_warmuplog_Checked(object sender, RoutedEventArgs e)
         {
                 MapControl.warmuplog = true;
                 map.Refresh();
-
         }
 
         private void cb_warmuplog_Unchecked(object sender, RoutedEventArgs e)
@@ -366,6 +400,16 @@ namespace PUBGTelemetryViewer
                 Console.WriteLine("Abandoned");
             }
                 
+        }
+
+        private void slider_time_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double newvalue = Convert.ToInt32(e.NewValue);
+            if(timeline_label != null)
+                timeline_label.Content = newvalue + " / " + slider_time.Maximum;
+            MapControl.currentMatchTime = MapControl.matchStartTime.AddSeconds(newvalue);
+            map.Refresh();
+            
         }
     }
 }

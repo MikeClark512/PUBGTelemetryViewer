@@ -513,6 +513,7 @@ namespace PUBGLibrary.API
                         logPlayerCreate.Player.Location.X = (double)telem.Character.Location.X;
                         logPlayerCreate.Player.Location.Y = (double)telem.Character.Location.Y;
                         logPlayerCreate.Player.Location.Z = (double)telem.Character.Location.Z;
+                        logPlayerCreate.Date = (DateTimeOffset)telem.D;
                         Telemetry.LogPlayerCreateList.Add(logPlayerCreate);
                         break;
                     case T.LogPlayerKill:

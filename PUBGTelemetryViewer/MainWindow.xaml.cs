@@ -349,7 +349,7 @@ namespace PUBGTelemetryViewer
         {
 
             slider_time.Maximum = Convert.ToInt32(player.LogPlayerLogoutList[0].DateTimeOffset.Subtract(player.LogPlayerCreateList[0].Date).TotalSeconds);
-            slider_time.Value = 1;
+            slider_time.Value = slider_time.Maximum;
             MapControl.matchStartTime = GetMatchStartTime(player.LogPlayerCreateList);
             MapControl.PlaneDepartureTime = GetPlaneDeparture(telemetryData);
         }

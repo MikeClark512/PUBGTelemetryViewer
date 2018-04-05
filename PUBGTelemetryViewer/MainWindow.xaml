@@ -42,9 +42,9 @@
         <Slider x:Name="slider_time" HorizontalAlignment="Left" Margin="125,0,0,8" Width="1298" Height="20" VerticalAlignment="Bottom" Foreground="#FF9E9E9E" Interval="1" Minimum="1" ValueChanged="slider_time_ValueChanged"/>
 
 
-        <Border BorderBrush="White" BorderThickness="1" HorizontalAlignment="Left" Height="33" Margin="1324,0,0,35" VerticalAlignment="Bottom" Width="99" Background="#7FFFFFFF">
+        <Border BorderBrush="White" BorderThickness="1" HorizontalAlignment="Left" Height="33" Margin="1296,0,0,35" VerticalAlignment="Bottom" Width="127" Background="#7FFFFFFF">
 
-            <Label x:Name="timeline_label" Content="0 / 0" Height="33" FontSize="20" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="-1" Width="99"/>
+            <Label x:Name="timeline_label" Content="0 / 0" Height="33" FontSize="20" HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="-1" Width="127"/>
         </Border>
 
 

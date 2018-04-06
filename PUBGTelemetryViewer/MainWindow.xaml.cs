@@ -42,12 +42,7 @@ namespace PUBGTelemetryViewer
         {
             InitializeComponent();
             Loaded += MainWindow_Loaded;
-
             LoadMap(0);
-
-
-
-
         }
 
         public void LoadMap(int mapid)
@@ -493,7 +488,8 @@ namespace PUBGTelemetryViewer
             loadEvents(playerdat, map.RootLayer.EventCache);
             loadGlobalEvents(telemetryData, map.RootLayer.EventCache);
 
-            loadKills(playerdat, map.RootLayer.KillCache);
+            // Will be implemented when API gets updated to contain the Location data of the attacker
+            //loadKills(playerdat, map.RootLayer.KillCache);
             slider_time.Value = slider_time.Maximum;
             map.Refresh();
         }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PUBGTelemetryViewer"
         xmlns:Windows="clr-namespace:BruTile.UI.Windows;assembly=BruTile" x:Class="PUBGTelemetryViewer.MainWindow"
         mc:Ignorable="d"
-        Title="PUBG Telemetry Viewer v0.2" Height="1024" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1602.5" WindowStartupLocation="CenterScreen">
+        Title="PUBG Telemetry Viewer v0.3" Height="1024" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1602.5" WindowStartupLocation="CenterScreen">
     <Grid x:Name="MainWindow1">
 
         <Windows:MapControl x:Name="map" VerticalAlignment="Stretch" Background="#FF0D2E3D" Margin="0,0,0.5,0"/>

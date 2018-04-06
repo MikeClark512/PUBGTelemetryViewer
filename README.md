@@ -16,15 +16,28 @@ Download the Source or download the latest Release. Start the PUBGTelemetryViewe
 
 # TODO
 -------
+* fix Red / Blue Zone drawing
 * Add markers for certain events
-* Make icons for event
 * Improve performance
+
 
 FAR AWAY TODO:
 * Implement Demo file reading
 
 
 # Changelog
+ UPDATE 5:
+* Added more Events to display
+* More accurate walking paths for a player
+* Started to add KillEvents but stopped till the API is updated with the fast and short approach
+
+ UPDATE 4:
+* added new Example images
+* fixed slider display
+
+ UPDATE 3:
+* Added Timeline for displaying
+* API Dialog now appears when no APIKey is saved
 
  UPDATE 2:
 * Changed Tile Resolutions to 1024x1024

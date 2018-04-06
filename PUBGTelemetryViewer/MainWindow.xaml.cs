@@ -103,6 +103,9 @@ namespace PUBGTelemetryViewer
             map.Transform.Center = new Point(16384d, -16384d);
             map.Transform.Resolution = schema.Resolutions[2];
             schema.Resolutions.Add(32);
+            schema.Resolutions.Add(16);
+            schema.Resolutions.Add(8);
+
         }
 
         private void ZoomOutButton_Click(object sender, RoutedEventArgs e)
@@ -209,7 +212,50 @@ namespace PUBGTelemetryViewer
         {
             try
             {
-                foreach(var pos in list.LogPlayerPositionList)
+                foreach(var t in list.logItemAttachList)
+                {
+                    Marker m = new Marker(t.Player.Location.X, t.Player.Location.Y, true, -1, t.DateTime, "Position", "test", 200);
+                    marker.Add(m);
+                }
+
+                foreach (var t in list.LogItemDetachList)
+                {
+                    Marker m = new Marker(t.Player.Location.X, t.Player.Location.Y, true, -1, t.DateTime, "Position", "test", 200);
+                    marker.Add(m);
+                }
+
+                foreach (var t in list.LogItemDropList)
+                {
+                    Marker m = new Marker(t.Player.Location.X, t.Player.Location.Y, true, -1, t.DateTimeOffset, "Position", "test", 200);
+                    marker.Add(m);
+                }
+
+                foreach (var t in list.LogItemEquipList)
+                {
+                    Marker m = new Marker(t.Player.Location.X, t.Player.Location.Y, true, -1, t.DateTimeOffset, "Position", "test", 200);
+                    marker.Add(m);
+                }
+
+                foreach (var t in list.LogItemPickupList)
+                {
+                    Marker m = new Marker(t.Player.Location.X, t.Player.Location.Y, true, -1, t.DateTimeOffset, "Position", "test", 200);
+                    marker.Add(m);
+                }
+
+                foreach (var t in list.LogItemUnequipList)
+                {
+                    Marker m = new Marker(t.Player.Location.X, t.Player.Location.Y, true, -1, t.DateTimeOffset, "Position", "test", 200);
+                    marker.Add(m);
+                }
+
+                foreach (var t in list.LogVehicleRideList)
+                {
+                    Marker m = new Marker(t.Player.Location.X, t.Player.Location.Y, true, -1, t.DateTimeOffset, "Position", "test", 200);
+                    marker.Add(m);
+                }
+
+
+                foreach (var pos in list.LogPlayerPositionList)
                 {
                     Marker m = new Marker(pos.LoggedPlayer.Location.X, pos.LoggedPlayer.Location.Y, true, -1, pos.DateTimeOffset, pos.ElapsedTime, "Position", "test", 200);
                     marker.Add(m);
@@ -253,6 +299,26 @@ namespace PUBGTelemetryViewer
                     else if(item.UsedItem.ItemID.Contains("Item_Heal_"))
                     {
                         Marker m = new Marker(item.Player.Location.X, item.Player.Location.Y, true, 7, item.DateTimeOffset, "Player used heal item : " + item.UsedItem.ItemID, "player used boost item", 200, Marker.Eventtype.Heal);
+                        marker.Add(m);
+                    }
+                }
+
+                foreach (var item in list.LogPlayerKillList)
+                {
+                    Marker m = new Marker(item.Killer.Location.X, item.Killer.Location.Y, true, 8, item.DateTimeOffset, list.PUBGName + "killed " + item.Victim.PUBGName, "Killed with " + item.DamageCauser.DamageCauserName, 200);
+                    marker.Add(m);
+                }
+
+                foreach (var item in list.LogPlayerTakeDamageList)
+                {
+                    if (item.Victim.PUBGName == list.PUBGName)
+                    {
+                        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, item.Victim.PUBGName + "hit " + list.PUBGName, "Damage " + item.Damage, 200);
+                        marker.Add(m);
+                    }
+                    else if (item.Attacker.PUBGName == list.PUBGName)
+                    {
+                        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, list.PUBGName + "hit " + item.Attacker.PUBGName, "Damage " + item.Damage, 200);
                         marker.Add(m);
                     }
                 }
@@ -310,6 +376,90 @@ namespace PUBGTelemetryViewer
                         markers.Add(m);
                     }
                 }
+
+                foreach (var item in list.LogVehicleRideList)
+                {
+                    Marker m = new Marker(item.Player.Location.X, item.Player.Location.Y, true, 7, item.DateTimeOffset, "Player board : " + item.Vehicle.vehicleID, "Player board vehicle", 200, Marker.Eventtype.Heal);
+                    markers.Add(m);
+                }
+
+                var death = GetPlayerDeath(list.LogPlayerKillList, list.PUBGName);
+                Marker deathm = new Marker(death.Victim.Location.X, death.Victim.Location.Y, true, 6, death.DateTimeOffset, list.PUBGName + " died", "", 200);
+                markers.Add(deathm);
+
+
+
+                foreach(var item in list.LogPlayerKillList)
+                {
+                    if(item.Killer.PUBGName == list.PUBGName)
+                    {
+                        Marker m = new Marker(item.Killer.Location.X, item.Killer.Location.Y, true, 8, item.DateTimeOffset, list.PUBGName + "killed " + item.Victim.PUBGName, "Killed with " + item.DamageCauser.DamageCauserName, 200);
+                        markers.Add(m);
+                    }
+                }
+
+                foreach (var item in list.LogPlayerTakeDamageList)
+                {
+                    if (item.Victim.PUBGName == list.PUBGName)
+                    {
+                        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, item.Victim.PUBGName + "hit " + list.PUBGName, "Damage " + item.Damage, 200);
+                        markers.Add(m);
+                    }
+                    else if(item.Attacker.PUBGName == list.PUBGName)
+                    {
+                        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, list.PUBGName + "hit " +  item.Attacker.PUBGName, "Damage " + item.Damage, 200);
+                        markers.Add(m);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        private void loadKills(PlayerSpecificLog playerSpecificLog, List<Marker> markers)
+        {
+            try
+            {
+
+                foreach(var item in playerSpecificLog.LogPlayerTakeDamageList)
+                {
+                    Marker att = new Marker(item.Attacker.Location.X, item.Attacker.Location.Y, true, 8, item.DateTimeOffset, "take dmg", "", 200);
+                    Marker vic = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, "take dmg 2", "", 200);
+                    markers.Add(att);
+                    markers.Add(vic);
+                }
+
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private LogPlayerKill GetPlayerDeath(List<LogPlayerKill> logPlayerKills, string PUBGName)
+        {
+            return logPlayerKills.LastOrDefault(x => x.Victim.PUBGName == PUBGName);
+
+        }
+
+        private void loadGlobalEvents(APITelemetry list, List<Marker> markers)
+        {
+            try
+            {
+                foreach(var item in list.LogCarePackageLandList)
+                {
+                    string items = "CarePackage Items: \n";
+                    for (int i = 0; i < item.CarePackage.Items.Count; i++)
+                        items += i + ". " + item.CarePackage.Items[i].ItemID + "\n";
+                    Marker m = new Marker(item.CarePackage.Location.X, item.CarePackage.Location.Y, true, 5, item.CarePackage.DateTimeOffset, "Care Package landed", items, 200);
+                    markers.Add(m);
+                }
+
+                
             }
             catch (Exception ex)
             {
@@ -341,6 +491,10 @@ namespace PUBGTelemetryViewer
             ConstructTimeline(playerdat);
             loadMarkers(playerdat, map.RootLayer.MarkerCache);
             loadEvents(playerdat, map.RootLayer.EventCache);
+            loadGlobalEvents(telemetryData, map.RootLayer.EventCache);
+
+            loadKills(playerdat, map.RootLayer.KillCache);
+            slider_time.Value = slider_time.Maximum;
             map.Refresh();
         }
 
@@ -349,9 +503,11 @@ namespace PUBGTelemetryViewer
         {
 
             slider_time.Maximum = Convert.ToInt32(player.LogPlayerLogoutList[0].DateTimeOffset.Subtract(player.LogPlayerCreateList[0].Date).TotalSeconds);
-            slider_time.Value = slider_time.Maximum;
+            slider_time.Value = slider_time.Maximum -1;
             MapControl.matchStartTime = GetMatchStartTime(player.LogPlayerCreateList);
             MapControl.PlaneDepartureTime = GetPlaneDeparture(telemetryData);
+
+
         }
 
         private DateTimeOffset GetMatchStartTime(List<LogPlayerCreate> playerCreate)

@@ -36,6 +36,8 @@ namespace BruTile.UI
         List<System.Windows.Shapes.Line> lineCache = new List<System.Windows.Shapes.Line>();
         List<BruTile.UI.Ellipse> ellipseCache = new List<BruTile.UI.Ellipse>();
 
+        List<BruTile.UI.Marker> killCache = new List<Marker>();
+
         const int maxRetries = 3;
 
         #endregion
@@ -78,6 +80,12 @@ namespace BruTile.UI
         {
             get { return ellipseCache;  }
         }
+
+        public List<Marker> KillCache
+        {
+            get { return killCache; }
+        }
+
 
         #endregion
 

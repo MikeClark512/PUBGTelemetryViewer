@@ -598,6 +598,7 @@ namespace PUBGLibrary.API
                         logPlayerTakeDamage.Damage.DamageAmount = (double)telem.Damage;
                         logPlayerTakeDamage.Damage.DamageCauserName = telem.DamageCauserName;
                         logPlayerTakeDamage.DateTimeOffset = (DateTimeOffset)telem.D;
+                   //     logPlayerTakeDamage.AttackID = (double)telem.AttackId;
                         Telemetry.LogPlayerTakeDamageList.Add(logPlayerTakeDamage);
                         break;
                     case T.LogVehicleDestroy:

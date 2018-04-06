@@ -453,7 +453,7 @@ namespace BruTile.UI.Windows
                 if ((this.renderer != null) && (this.rootLayer != null))
                 {
                     
-                    this.renderer.Render(MapControl.currentMatchTime,this.canvas, this.canvas2, this.rootLayer.Schema, this.transform, this.rootLayer.MemoryCache,this.rootLayer.ellipsesCache, this.rootLayer.MarkerCache, this.rootLayer.EventCache);
+                    this.renderer.Render(MapControl.currentMatchTime,this.canvas, this.canvas2, this.rootLayer.Schema, this.transform, this.rootLayer.MemoryCache,this.rootLayer.ellipsesCache, this.rootLayer.MarkerCache, this.rootLayer.EventCache, this.rootLayer.KillCache);
                 }
                 this.update = false;
             }

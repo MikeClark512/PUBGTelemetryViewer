@@ -40,7 +40,7 @@ namespace BruTile.UI.Windows
 
         public IMarkerControl ActiveMarker { get; private set; }
 
-        public void Render(DateTimeOffset time, Canvas canvas,Canvas canvas2, TileSchema schema, ITransform transform, MemoryCache<MemoryStream> cache, List<Ellipse> ellipseCache, List<Marker> markerCache, List<Marker> eventCache)
+        public void Render(DateTimeOffset time, Canvas canvas,Canvas canvas2, TileSchema schema, ITransform transform, MemoryCache<MemoryStream> cache, List<Ellipse> ellipseCache, List<Marker> markerCache, List<Marker> eventCache, List<Marker> killCache)
         {
             CollapseAll(canvas);
             CollapseAll(canvas2);
@@ -50,6 +50,12 @@ namespace BruTile.UI.Windows
             DrawLines(canvas, schema, transform, markerCache, transform.Extent,time, level);
             // DrawCircle(canvas, schema, transform, ellipseCache, transform.Extent, level);
             DrawEvents(canvas2, schema, transform, eventCache, transform.Extent,time, level);
+
+            //Not yet fully implemented in the API 
+            //Only working by taking the way from LogPlayerAttack and AttackID and searching that in the LogPlayerTakeDamage log from all players
+            //Will be implemented when the API is Updated 
+            DrawKills(canvas, schema, transform, killCache, transform.Extent, time, level);
+
             RemoveCollapsed(canvas);
             RemoveCollapsed(canvas2);
             
@@ -61,7 +67,11 @@ namespace BruTile.UI.Windows
 
             for (int i = 0; i < cachemarker.Count - 1; i++)
             {
-                if (cachemarker.Count == 0 || cachemarker[i].timeOffset > time || (!MapControl.warmuplog && cachemarker[i].ElapsedTime <= 0))
+                if (cachemarker.Count == 0)
+                    continue;
+
+
+                if ((cachemarker[i].timeOffset < MapControl.PlaneDepartureTime && !MapControl.warmuplog) || (cachemarker[i+1].timeOffset < MapControl.PlaneDepartureTime && !MapControl.warmuplog))
                     continue;
                 Point p = transform.WorldToMap(cachemarker[i].X, cachemarker[i].Y);
                 Point p2 = transform.WorldToMap(cachemarker[i + 1].X, cachemarker[i + 1].Y);
@@ -91,6 +101,49 @@ namespace BruTile.UI.Windows
 
             }
         }
+
+        public void DrawKills(Canvas canvas, TileSchema schema, ITransform transform, List<Marker> cachemarker, Extent extent, DateTimeOffset time, int level)
+        {
+            //cachemarker.Sort(delegate (Marker p1, Marker p2) { return p1.timeOffset.CompareTo(p2.timeOffset); });
+
+            for (int i = 0; i < cachemarker.Count - 1;)
+            {
+                if (cachemarker.Count == 0)
+                    continue;
+
+
+                if ((cachemarker[i].timeOffset < MapControl.PlaneDepartureTime && !MapControl.warmuplog) || (cachemarker[i + 1].timeOffset < MapControl.PlaneDepartureTime && !MapControl.warmuplog))
+                    continue;
+                Point p = transform.WorldToMap(cachemarker[i].X, cachemarker[i].Y);
+                Point p2 = transform.WorldToMap(cachemarker[i + 1].X, cachemarker[i + 1].Y);
+                var line = new System.Windows.Shapes.Line();
+                //if (cachemarker[i].Type == "Vehicle leave")
+                //    line.Stroke = Brushes.Blue;
+                //else
+                line.Stroke = System.Windows.Media.Brushes.Red;
+                line.X1 = p.X;
+                line.X2 = p2.X;
+                line.Y1 = p.Y;
+                line.Y2 = p2.Y;
+                line.StrokeThickness = 2;
+                line.Visibility = Visibility.Collapsed;
+                if (!canvas.Children.Contains(line))
+                {
+                    canvas.Children.Add(line);
+
+                }
+                Rect dest = MapTransformHelper.WorldToMap(extent, transform);
+
+                //if (dest.Contains(p) && dest.Contains(p2))
+                //{
+                Canvas.SetZIndex(line, 200);
+                //  }
+                line.Visibility = Visibility.Visible;
+                i += 2;
+
+            }
+        }
+
 
         private void DrawCircle(Canvas canvas, TileSchema schema, ITransform transform, List<BruTile.UI.Ellipse> cache, Extent extent, int level)
         {
@@ -243,7 +296,10 @@ namespace BruTile.UI.Windows
             foreach (Marker m in cache)
             {
 
-                if (cache.Count == 0 || m.timeOffset > time || m.timeOffset < MapControl.PlaneDepartureTime)
+                if (cache.Count == 0)
+                    continue;
+
+                if ((m.timeOffset < MapControl.PlaneDepartureTime && !MapControl.warmuplog))
                     continue;
 
                 if (m.UIElement == null)

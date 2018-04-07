@@ -54,7 +54,7 @@ namespace BruTile.UI.Windows
             //Not yet fully implemented in the API 
             //Only working by taking the way from LogPlayerAttack and AttackID and searching that in the LogPlayerTakeDamage log from all players
             //Will be implemented when the API is Updated 
-            DrawKills(canvas, schema, transform, killCache, transform.Extent, time, level);
+           // DrawKills(canvas, schema, transform, killCache, transform.Extent, time, level);
 
             RemoveCollapsed(canvas);
             RemoveCollapsed(canvas2);
@@ -72,6 +72,9 @@ namespace BruTile.UI.Windows
 
 
                 if ((cachemarker[i].timeOffset < MapControl.PlaneDepartureTime && !MapControl.warmuplog) || (cachemarker[i+1].timeOffset < MapControl.PlaneDepartureTime && !MapControl.warmuplog))
+                    continue;
+
+                if (cachemarker[i].timeOffset > MapControl.currentMatchTime)
                     continue;
                 Point p = transform.WorldToMap(cachemarker[i].X, cachemarker[i].Y);
                 Point p2 = transform.WorldToMap(cachemarker[i + 1].X, cachemarker[i + 1].Y);
@@ -301,7 +304,8 @@ namespace BruTile.UI.Windows
 
                 if ((m.timeOffset < MapControl.PlaneDepartureTime && !MapControl.warmuplog))
                     continue;
-
+                if (m.timeOffset > MapControl.currentMatchTime)
+                    continue;
                 if (m.UIElement == null)
                 {
                     if (!m.Visible) continue;

@@ -25,7 +25,6 @@ using BruTile.UI.Windows;
 //PubgLibary Using
 using PUBGLibrary;
 using PUBGLibrary.API;
-
 namespace PUBGTelemetryViewer
 {
     /// <summary>
@@ -91,6 +90,7 @@ namespace PUBGTelemetryViewer
             AddIcon(map.MarkerImages, 7, "heal");
             AddIcon(map.MarkerImages, 8, "kill");
             AddIcon(map.MarkerImages, 9, "take-dmg");
+            AddIcon(map.MarkerImages, 10, "join-car");
         }
 
         private void InitializeTransform(TileSchema schema)
@@ -275,12 +275,13 @@ namespace PUBGTelemetryViewer
                     if (picture == -1)
                         continue;
                     Marker m = null;
+                    
                     if(picture == 1)
-                       m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving Plane", "user left plane for parachuting", 200, Marker.Eventtype.Plane_leaving);
+                       m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving " + pos.Vehicle.vehicleID.EnumForString(), "user left " + pos.Vehicle.vehicleID.EnumForString(), 200, Marker.Eventtype.Plane_leaving);
                     else if(picture == 3)
-                        m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving Parachuting", "user left Parachute for walking", 200, Marker.Eventtype.Plane_leaving);
+                        m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving " + pos.Vehicle.vehicleID.EnumForString(), "user left " + pos.Vehicle.vehicleID.EnumForString(), 200, Marker.Eventtype.Plane_leaving);
                     else if(picture == 2)
-                        m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving Vehicle", "user left vehicle for walking", 200, Marker.Eventtype.Plane_leaving);
+                        m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving " + pos.Vehicle.vehicleID.EnumForString(), "user left " + pos.Vehicle.vehicleID.EnumForString(), 200, Marker.Eventtype.Plane_leaving);
                     marker.Add(m);
                 }
 
@@ -304,19 +305,19 @@ namespace PUBGTelemetryViewer
                     marker.Add(m);
                 }
 
-                foreach (var item in list.LogPlayerTakeDamageList)
-                {
-                    if (item.Victim.PUBGName == list.PUBGName)
-                    {
-                        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, item.Victim.PUBGName + "hit " + list.PUBGName, "Damage " + item.Damage, 200);
-                        marker.Add(m);
-                    }
-                    else if (item.Attacker.PUBGName == list.PUBGName)
-                    {
-                        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, list.PUBGName + "hit " + item.Attacker.PUBGName, "Damage " + item.Damage, 200);
-                        marker.Add(m);
-                    }
-                }
+                //foreach (var item in list.LogPlayerTakeDamageList)
+                //{
+                //    if (item.Victim.PUBGName == list.PUBGName)
+                //    {
+                //        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, item.Victim.PUBGName + "hit " + list.PUBGName, "Damage " + item.Damage, 200);
+                //        marker.Add(m);
+                //    }
+                //    else if (item.Attacker.PUBGName == list.PUBGName)
+                //    {
+                //        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, list.PUBGName + "hit " + item.Attacker.PUBGName, "Damage " + item.Damage, 200);
+                //        marker.Add(m);
+                //    }
+                //}
             }
             catch (Exception ex)
             {
@@ -350,11 +351,11 @@ namespace PUBGTelemetryViewer
                         continue;
                     Marker m = null;
                     if (picture == 1)
-                        m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving Plane", "user left plane for parachuting", 200, Marker.Eventtype.Plane_leaving);
+                        m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving " + pos.Vehicle.vehicleID.EnumForString(), "user left " + pos.Vehicle.vehicleID.EnumForString(), 200, Marker.Eventtype.Plane_leaving);
                     else if (picture == 3)
-                        m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving Parachuting", "user left Parachute for walking", 200, Marker.Eventtype.Plane_leaving);
+                        m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving " + pos.Vehicle.vehicleID.EnumForString(), "user left " + pos.Vehicle.vehicleID.EnumForString(), 200, Marker.Eventtype.Plane_leaving);
                     else if (picture == 2)
-                        m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving Vehicle", "user left vehicle for walking", 200, Marker.Eventtype.Plane_leaving);
+                        m = new Marker(pos.Player.Location.X, pos.Player.Location.Y, true, picture, pos.DateTimeOffset, "Leaving " + pos.Vehicle.vehicleID.EnumForString(), "user left " + pos.Vehicle.vehicleID.EnumForString(), 200, Marker.Eventtype.Plane_leaving);
                     markers.Add(m);
                 }
 
@@ -374,7 +375,7 @@ namespace PUBGTelemetryViewer
 
                 foreach (var item in list.LogVehicleRideList)
                 {
-                    Marker m = new Marker(item.Player.Location.X, item.Player.Location.Y, true, 7, item.DateTimeOffset, "Player board : " + item.Vehicle.vehicleID, "Player board vehicle", 200, Marker.Eventtype.Heal);
+                    Marker m = new Marker(item.Player.Location.X, item.Player.Location.Y, true, 10, item.DateTimeOffset, "Player board : " + item.Vehicle.vehicleID.EnumForString(), "Player board " + item.Vehicle.vehicleID.EnumForString(), 200, Marker.Eventtype.Heal);
                     markers.Add(m);
                 }
 
@@ -393,19 +394,19 @@ namespace PUBGTelemetryViewer
                     }
                 }
 
-                foreach (var item in list.LogPlayerTakeDamageList)
-                {
-                    if (item.Victim.PUBGName == list.PUBGName)
-                    {
-                        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, item.Victim.PUBGName + "hit " + list.PUBGName, "Damage " + item.Damage, 200);
-                        markers.Add(m);
-                    }
-                    else if(item.Attacker.PUBGName == list.PUBGName)
-                    {
-                        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, list.PUBGName + "hit " +  item.Attacker.PUBGName, "Damage " + item.Damage, 200);
-                        markers.Add(m);
-                    }
-                }
+                //foreach (var item in list.LogPlayerTakeDamageList)
+                //{
+                //    if (item.Victim.PUBGName == list.PUBGName)
+                //    {
+                //        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, item.Victim.PUBGName + "hit " + list.PUBGName, "Damage " + item.Damage, 200);
+                //        markers.Add(m);
+                //    }
+                //    else if(item.Attacker.PUBGName == list.PUBGName)
+                //    {
+                //        Marker m = new Marker(item.Victim.Location.X, item.Victim.Location.Y, true, 8, item.DateTimeOffset, list.PUBGName + "hit " +  item.Attacker.PUBGName, "Damage " + item.Damage, 200);
+                //        markers.Add(m);
+                //    }
+                //}
 
             }
             catch (Exception ex)
@@ -474,7 +475,6 @@ namespace PUBGTelemetryViewer
             bi.EndInit();
             list.Add(index, bi);
         }
-
         private void playerlist_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             map.ClearMarkers();

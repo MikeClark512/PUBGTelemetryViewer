@@ -361,6 +361,7 @@ namespace PUBGLibrary.API
 
     public enum T
     {
+        _UnknownTelemetryEvent_,
         LogCarePackageLand,
         LogCarePackageSpawn,
         LogGameStatePeriodic,
@@ -383,11 +384,20 @@ namespace PUBGLibrary.API
         LogPlayerTakeDamage,
         LogVehicleDestroy,
         LogVehicleLeave,
-        LogVehicleRide
+        LogVehicleRide,
+        LogVaultStart,
+        LogParachuteLanding,
+        LogWeaponFireCount,
+        LogObjectDestroy,
+        LogPlayerMakeGroggy,
+        LogItemPickupFromLootBox,
+        LogHeal,
+        LogArmorDestroy,
     };
 
     public enum VehicleId
     {
+        _Unknown_Vechile_Id_,
         AquaRailA01_C,
         BoatPG117_C,
         BpMotorbike04_C,
@@ -423,7 +433,7 @@ namespace PUBGLibrary.API
         DummyTransportAircraft_C,
         ParachutePlayer_C,
         PG117_A_01_C,
-        Empty
+        Empty,
     }
     
     public enum VehicleType
@@ -676,7 +686,15 @@ namespace PUBGLibrary.API
                 case "LogVehicleDestroy": return T.LogVehicleDestroy;
                 case "LogVehicleLeave": return T.LogVehicleLeave;
                 case "LogVehicleRide": return T.LogVehicleRide;
-                default: return null;
+                case "LogVaultStart": return T.LogVaultStart;
+                case "LogParachuteLanding": return T.LogParachuteLanding;
+                case "LogWeaponFireCount": return T.LogWeaponFireCount;
+                case "LogObjectDestroy": return T.LogObjectDestroy;
+                case "LogPlayerMakeGroggy": return T.LogPlayerMakeGroggy;
+                case "LogItemPickupFromLootBox": return T.LogItemPickupFromLootBox;
+                case "LogHeal": return T.LogHeal;
+                case "LogArmorDestroy": return T.LogArmorDestroy;
+                default: return T._UnknownTelemetryEvent_;
             }
         }
 
@@ -761,7 +779,7 @@ namespace PUBGLibrary.API
                 case "": return VehicleId.Empty;
                 case "ParachutePlayer_C": return VehicleId.ParachutePlayer_C;
                 case "PG117_A_01_C": return VehicleId.PG117_A_01_C;
-                default: return null;
+                default: return VehicleId._Unknown_Vechile_Id_;
             }
         }
 

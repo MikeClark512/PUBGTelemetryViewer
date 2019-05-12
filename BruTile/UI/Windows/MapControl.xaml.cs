@@ -48,7 +48,7 @@ namespace BruTile.UI.Windows
         private Renderer renderer = new Renderer();
         public event EventHandler ErrorMessageChanged;
 
-        public static bool warmuplog = true;
+        public static bool warmuplog = false;
         public static DateTimeOffset matchStartTime;
         public static DateTimeOffset currentMatchTime;
         public static DateTimeOffset PlaneDepartureTime;

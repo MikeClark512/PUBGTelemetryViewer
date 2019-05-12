@@ -37,7 +37,7 @@
             </Grid>
         </Border>
         <ListBox x:Name="playerlist" HorizontalAlignment="Left" Margin="29,107,0,396" Width="133" SelectionChanged="playerlist_SelectionChanged"/>
-        <CheckBox x:Name="cb_warmuplog" Content="Show Warmup Infos" HorizontalAlignment="Left" Margin="29,602,0,0" VerticalAlignment="Top" Width="133" Checked="cb_warmuplog_Checked" IsChecked="True" Unchecked="cb_warmuplog_Unchecked"/>
+        <CheckBox x:Name="cb_warmuplog" Content="Show Warmup Infos" HorizontalAlignment="Left" Margin="29,602,0,0" VerticalAlignment="Top" Width="133" Checked="cb_warmuplog_Checked" Unchecked="cb_warmuplog_Unchecked"/>
         <Button x:Name="btn_settings" Content="Settings" Margin="10,0,0,10" RenderTransformOrigin="-0.22,0.251" Click="btn_settings_Click" HorizontalAlignment="Left" Width="75" Height="20" VerticalAlignment="Bottom"/>
         <Slider x:Name="slider_time" HorizontalAlignment="Left" Margin="125,0,0,8" Width="1298" Height="20" VerticalAlignment="Bottom" Foreground="#FF9E9E9E" Interval="1" Minimum="1" ValueChanged="slider_time_ValueChanged"/>
 

@@ -441,7 +441,7 @@ namespace PUBGLibrary.API
                     case T.LogMatchDefinition:
                         Telemetry.LogMatchDefinition.MatchID = telem.MatchId;
                         Telemetry.LogMatchDefinition.PingQuality = telem.PingQuality;
-                        Telemetry.LogMatchDefinition.Version = (int)telem.V;
+                        Telemetry.LogMatchDefinition.Version = telem.V;
                         Telemetry.LogMatchDefinition.Event_timestamp = (DateTimeOffset)telem.D;
                         break;
                     case T.LogMatchEnd:
@@ -484,23 +484,23 @@ namespace PUBGLibrary.API
                             AttackID = (double)telem.AttackId,
                             AttackType = telem.AttackType
                         };
-                        logPlayerAttack.Transport.fuelPercent = (int)telem.Vehicle.FeulPercent;
-                        logPlayerAttack.Transport.healthPercent = (double)telem.Vehicle.HealthPercent;
-                        logPlayerAttack.Transport.vehicleID = (VehicleId)telem.Vehicle.VehicleId;
-                        logPlayerAttack.Transport.vehicleType = telem.Vehicle.VehicleType;
+                        logPlayerAttack.Transport.fuelPercent = telem.Vehicle?.FeulPercent;
+                        logPlayerAttack.Transport.healthPercent = telem.Vehicle?.HealthPercent;
+                        logPlayerAttack.Transport.vehicleID = telem.Vehicle?.VehicleId;
+                        logPlayerAttack.Transport.vehicleType = telem.Vehicle?.VehicleType;
                         logPlayerAttack.Attacker.AccountID = telem.Attacker.AccountId;
-                        logPlayerAttack.Attacker.Health = (double)telem.Attacker.Health;
-                        logPlayerAttack.Attacker.Location.X = (double)telem.Attacker.Location.X;
-                        logPlayerAttack.Attacker.Location.Y = (double)telem.Attacker.Location.Y;
-                        logPlayerAttack.Attacker.Location.Z = (double)telem.Attacker.Location.Z;
+                        logPlayerAttack.Attacker.Health = telem.Attacker.Health;
+                        logPlayerAttack.Attacker.Location.X = telem.Attacker.Location.X;
+                        logPlayerAttack.Attacker.Location.Y = telem.Attacker.Location.Y;
+                        logPlayerAttack.Attacker.Location.Z = telem.Attacker.Location.Z;
                         logPlayerAttack.Attacker.PUBGName = telem.Attacker.Name;
-                        logPlayerAttack.Attacker.Ranking = (int)telem.Attacker.Ranking;
-                        logPlayerAttack.Attacker.TeamID = (int)telem.Attacker.TeamId;
+                        logPlayerAttack.Attacker.Ranking = telem.Attacker.Ranking;
+                        logPlayerAttack.Attacker.TeamID = telem.Attacker.TeamId;
                         logPlayerAttack.AttackerWeapon.Categroy = telem.Weapon.Category;
                         logPlayerAttack.AttackerWeapon.SubCategroy = telem.Weapon.SubCategory;
                         logPlayerAttack.AttackerWeapon.ItemID = telem.Weapon.ItemId;
-                        logPlayerAttack.AttackerWeapon.StackCount = (int)telem.Weapon.StackCount;
-                        logPlayerAttack.DateTimeOffset = (DateTimeOffset)telem.D;
+                        logPlayerAttack.AttackerWeapon.StackCount = telem.Weapon.StackCount;
+                        logPlayerAttack.DateTimeOffset = telem.D.Value;
                         Telemetry.logPlayerAttackList.Add(logPlayerAttack);
                         break;
                     case T.LogPlayerCreate:
@@ -546,7 +546,7 @@ namespace PUBGLibrary.API
                         {
                             AccountID = telem.AccountId,
                             DateTime = (DateTimeOffset)telem.D,
-                            Result = (bool)telem.Result,
+                            Result = telem.Result,
                             ErrorMessage = telem.ErrorMessage
                         };
                         break;
@@ -577,25 +577,25 @@ namespace PUBGLibrary.API
                         break;
                     case T.LogPlayerTakeDamage:
                         LogPlayerTakeDamage logPlayerTakeDamage = new LogPlayerTakeDamage();
-                        logPlayerTakeDamage.Attacker.AccountID = telem.Attacker.AccountId;
-                        logPlayerTakeDamage.Attacker.Health = (double)telem.Attacker.Health;
-                        logPlayerTakeDamage.Attacker.Location.X = (double)telem.Attacker.Location.X;
-                        logPlayerTakeDamage.Attacker.Location.Y = (double)telem.Attacker.Location.Y;
-                        logPlayerTakeDamage.Attacker.Location.Z = (double)telem.Attacker.Location.Z;
-                        logPlayerTakeDamage.Attacker.PUBGName = telem.Attacker.Name;
-                        logPlayerTakeDamage.Attacker.Ranking = (int)telem.Attacker.Ranking;
-                        logPlayerTakeDamage.Attacker.TeamID = (int)telem.Attacker.TeamId;
+                        logPlayerTakeDamage.Attacker.AccountID = telem.Attacker?.AccountId;
+                        logPlayerTakeDamage.Attacker.Health = telem.Attacker?.Health;
+                        logPlayerTakeDamage.Attacker.Location.X = telem.Attacker?.Location.X;
+                        logPlayerTakeDamage.Attacker.Location.Y = telem.Attacker?.Location.Y;
+                        logPlayerTakeDamage.Attacker.Location.Z = telem.Attacker?.Location.Z;
+                        logPlayerTakeDamage.Attacker.PUBGName = telem.Attacker?.Name;
+                        logPlayerTakeDamage.Attacker.Ranking = telem.Attacker?.Ranking;
+                        logPlayerTakeDamage.Attacker.TeamID = telem.Attacker?.TeamId;
                         logPlayerTakeDamage.Victim.AccountID = telem.Victim.AccountId;
-                        logPlayerTakeDamage.Victim.Health = (double)telem.Victim.Health;
-                        logPlayerTakeDamage.Victim.Location.X = (double)telem.Victim.Location.X;
-                        logPlayerTakeDamage.Victim.Location.Y = (double)telem.Victim.Location.Y;
-                        logPlayerTakeDamage.Victim.Location.Z = (double)telem.Victim.Location.Z;
+                        logPlayerTakeDamage.Victim.Health = telem.Victim.Health;
+                        logPlayerTakeDamage.Victim.Location.X = telem.Victim.Location.X;
+                        logPlayerTakeDamage.Victim.Location.Y = telem.Victim.Location.Y;
+                        logPlayerTakeDamage.Victim.Location.Z = telem.Victim.Location.Z;
                         logPlayerTakeDamage.Victim.PUBGName = telem.Victim.Name;
-                        logPlayerTakeDamage.Victim.Ranking = (int)telem.Victim.Ranking;
-                        logPlayerTakeDamage.Victim.TeamID = (int)telem.Victim.TeamId;
+                        logPlayerTakeDamage.Victim.Ranking = telem.Victim.Ranking;
+                        logPlayerTakeDamage.Victim.TeamID = telem.Victim.TeamId;
                         logPlayerTakeDamage.Damage.DamageTypeCategory = telem.DamageTypeCategory;
                         logPlayerTakeDamage.Damage.DamageReason = telem.DamageReason;
-                        logPlayerTakeDamage.Damage.DamageAmount = (double)telem.Damage;
+                        logPlayerTakeDamage.Damage.DamageAmount = telem.Damage;
                         logPlayerTakeDamage.Damage.DamageCauserName = telem.DamageCauserName;
                         logPlayerTakeDamage.DateTimeOffset = (DateTimeOffset)telem.D;
                    //     logPlayerTakeDamage.AttackID = (double)telem.AttackId;
@@ -603,14 +603,14 @@ namespace PUBGLibrary.API
                         break;
                     case T.LogVehicleDestroy:
                         LogVehicleDestroy logVehicleDestroy = new LogVehicleDestroy();
-                        logVehicleDestroy.Attacker.AccountID = telem.Attacker.AccountId;
-                        logVehicleDestroy.Attacker.Health = (double)telem.Attacker.Health;
-                        logVehicleDestroy.Attacker.Location.X = (double)telem.Attacker.Location.X;
-                        logVehicleDestroy.Attacker.Location.Y = (double)telem.Attacker.Location.Y;
-                        logVehicleDestroy.Attacker.Location.Z = (double)telem.Attacker.Location.Z;
-                        logVehicleDestroy.Attacker.PUBGName = telem.Attacker.Name;
-                        logVehicleDestroy.Attacker.Ranking = (int)telem.Attacker.Ranking;
-                        logVehicleDestroy.Attacker.TeamID = (int)telem.Attacker.TeamId;
+                        logVehicleDestroy.Attacker.AccountID = telem.Attacker?.AccountId;
+                        logVehicleDestroy.Attacker.Health = telem.Attacker?.Health;
+                        logVehicleDestroy.Attacker.Location.X = telem.Attacker?.Location.X;
+                        logVehicleDestroy.Attacker.Location.Y = telem.Attacker?.Location.Y;
+                        logVehicleDestroy.Attacker.Location.Z = telem.Attacker?.Location.Z;
+                        logVehicleDestroy.Attacker.PUBGName = telem.Attacker?.Name;
+                        logVehicleDestroy.Attacker.Ranking = telem.Attacker?.Ranking;
+                        logVehicleDestroy.Attacker.TeamID = telem.Attacker?.TeamId;
                         logVehicleDestroy.DestroyedVehicle.fuelPercent = (int)telem.Vehicle.FeulPercent;
                         logVehicleDestroy.DestroyedVehicle.healthPercent = (double)telem.Vehicle.HealthPercent;
                         logVehicleDestroy.DestroyedVehicle.vehicleID = (VehicleId)telem.Vehicle.VehicleId;

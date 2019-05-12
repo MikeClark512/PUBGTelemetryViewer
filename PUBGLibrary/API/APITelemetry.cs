@@ -484,7 +484,7 @@ namespace PUBGLibrary.API
         /// <summary>
         /// If the login failed or not
         /// </summary>
-        public bool Result;
+        public bool? Result;
         public string AccountID;
         public string ErrorMessage;
         public DateTimeOffset DateTime = new DateTimeOffset();
@@ -514,7 +514,7 @@ namespace PUBGLibrary.API
     {
         public string MatchID;
         public string PingQuality;
-        public int Version;
+        public int? Version;
         public DateTimeOffset Event_timestamp = new DateTimeOffset();
     }
     /// <summary>
@@ -544,7 +544,7 @@ namespace PUBGLibrary.API
     {
         public string DamageTypeCategory;
         public string DamageReason;
-        public double DamageAmount;
+        public double? DamageAmount;
         public string DamageCauserName;
         
     }
@@ -557,17 +557,17 @@ namespace PUBGLibrary.API
     public class Transport
     {
         public string vehicleType;
-        public VehicleId vehicleID;
-        public double healthPercent;
-        public int fuelPercent;
+        public VehicleId? vehicleID;
+        public double? healthPercent;
+        public double? fuelPercent;
     }
     public class GameState
     {
-        public int ElapsedTime;
-        public int NumAliveTeams;
-        public int NumJoinPlayers;
-        public int NumStartPlayers;
-        public int NumAlivePlayers;
+        public int? ElapsedTime;
+        public int? NumAliveTeams;
+        public int? NumJoinPlayers;
+        public int? NumStartPlayers;
+        public int? NumAlivePlayers;
         public SafeZone SafeZone = new SafeZone();
         public BlueZone BlueZone = new BlueZone();
         public RedZone RedZone = new RedZone();
@@ -575,24 +575,24 @@ namespace PUBGLibrary.API
     }
     public class SafeZone
     {
-        public double X;
-        public double Y;
-        public double Z;
-        public double Radius;
+        public double? X;
+        public double? Y;
+        public double? Z;
+        public double? Radius;
     }
     public class BlueZone
     {
-        public double X;
-        public double Y;
-        public double Z;
-        public double Radius;
+        public double? X;
+        public double? Y;
+        public double? Z;
+        public double? Radius;
     }
     public class RedZone
     {
-        public double X;
-        public double Y;
-        public double Z;
-        public double Radius;
+        public double? X;
+        public double? Y;
+        public double? Z;
+        public double? Radius;
     }
     public class CarePackage
     {
@@ -610,7 +610,7 @@ namespace PUBGLibrary.API
         /// <summary>
         /// The amount in the stack
         /// </summary>
-        public int StackCount;
+        public int? StackCount;
         /// <summary>
         /// The type of item (i.e Attachment, Weapon, Use, etc)
         /// </summary>
@@ -628,16 +628,16 @@ namespace PUBGLibrary.API
     {
         public string PUBGName;
         public string AccountID;
-        public int TeamID;
-        public double Health;
+        public int? TeamID;
+        public double? Health;
         public Location Location = new Location();
-        public int Ranking;
+        public int? Ranking;
     }
     public class Location
     {
-        public double X;
-        public double Y;
-        public double Z;
+        public double? X;
+        public double? Y;
+        public double? Z;
     }
     
 }

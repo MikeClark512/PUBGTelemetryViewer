@@ -397,7 +397,7 @@ namespace PUBGLibrary.API
 
     public enum VehicleId
     {
-        _Unknown_Vechile_Id_,
+        _Unknown_Vehicle_Id_,
         AquaRailA01_C,
         BoatPG117_C,
         BpMotorbike04_C,
@@ -779,7 +779,7 @@ namespace PUBGLibrary.API
                 case "": return VehicleId.Empty;
                 case "ParachutePlayer_C": return VehicleId.ParachutePlayer_C;
                 case "PG117_A_01_C": return VehicleId.PG117_A_01_C;
-                default: return VehicleId._Unknown_Vechile_Id_;
+                default: return VehicleId._Unknown_Vehicle_Id_;
             }
         }
 
